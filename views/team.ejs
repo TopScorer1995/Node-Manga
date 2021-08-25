@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+<title><%=data[0][0].team_name%> - mymanga</title>
+<%- include styles %>
+</head>
+
+
+<body class="light-blue-skin">
+<%- include header %>
+<main class="content" style="margin-top:70px !important;">
+
+
+
+
+
+
+
+
+<!--Zoom effect-->
+<div class="view overlay zoom d-block">
+    <img src="<%=data[0][0].wallpaper%>" class="img-fluid w-100" style="height:400px !important;object-fit: cover;" alt="Responsive image">
+    <%if(data[1].length>0){%>
+    <div class="mask flex-center rgba-black-strong pointer rtl waves-effect waves-light" id="wallpaper_file_trigger">
+        <div class="white-text"><i class="fas fa-cloud-upload-alt" style="font-size:40px"></i> </div>
+        <div class="white-text mr-2 w_600"> تعديل الخلفية</div>
+    </div>
+    <form id="wallpaper_form">
+    <input type="file" name="wallpaper" style="display: none" id="wallpaper_file">
+    <input type="hidden" name="id" value="<%=data[0][0].id%>">
+    </form>
+    <%}%>
+</div>
+
+<div class="row  w-100 rtl mb-5 mx-0">
+	<div class="col-md-3 px-4">
+<img src="<%=data[0][0].team_profile%>" alt="thumbnail" class="img-thumbnail mx-auto d-block position-relative rounded-circle animated flipInY card" style="width: 250px;margin-top:-40%;">
+<div class="text-center w_600 text-primary my-2" style="font-size:18px"><%=data[0][0].team_name%></div>
+<div class="rtl text-center">
+	<%if(data[1].length>0){%>
+    <button type="button" class="btn btn-light-blue btn-rounded btn-sm" onclick="get_team_modal(<%=data[0][0].id%>)">تعديل</button>
+	<%}%>
+    
+    <button type="button" class="btn btn-primary btn-rounded btn-sm" id="join_button" onclick="<%if(data[2].length==0){%>join_or_disjoin()<%}else if(data[2][0].member_status==1){%>ask_to_confirm(function(){join_or_disjoin()})<%}else if(data[2][0].member_status==0){%>join_or_disjoin()<%}%>"><%if(data[2].length==0){%>الإنضمام<%}else if(data[2][0].member_status==1){%>مغادرة الفريق<%}else if(data[2][0].member_status==0){%>إلغاء الطلب<%}%></button>
+    <button type="button" class="btn btn-default btn-rounded btn-sm" onclick="get_report_modal('team',<%=data[0][0].id%>)">إبلاغ</button>
+ </div>
+  <div class="card rtl text-right d-block mt-4">
+  <div class="card-body">
+    <h5 class="font-weight-bold mb-3">وصف الفريق</h5>
+    <p class="mb-0"><%if(data[0][0].team_status=="" || data[0][0].team_status==null){%>لا يوجد وصف لهذا الفريق<%}else{%><%=data[0][0].team_status%><%}%></p>
+  </div>
+  <ul class="list-group list-group-flush px-0">
+    <li class="list-group-item py-1"><a class="btn-floating btn-sm btn-email waves-effect waves-light" type="button" role="button" <%if(data[0][0].email!="" && data[0][0].email!=null){%>href="mailto:<%=data[0][0].email%>"<%}%>><i class="fas fa-envelope"></i></a> <%if(data[0][0].email=="" || data[0][0].email==null){%>لا يوجد بريد إلكتروني<%}else{%><%=data[0][0].email%><%}%></li>
+    <li class="list-group-item py-1"><a class="btn-floating btn-sm btn-slack waves-effect waves-light" type="button" role="button" <%if(data[0][0].website!="" && data[0][0].website!=null){%>href="<%=data[0][0].website%>"<%}%>><i class="fab fa-slack-hash"></i></a> <%if(data[0][0].website=="" || data[0][0].website==null){%>لا يوجد موقع إلكتروني<%}else{%><%=data[0][0].website.replace("http://","").replace("https://","").replace("www.","")%><%}%></li>
+    <li class="list-group-item py-1"><a class="btn-floating btn-sm btn-fb waves-effect waves-light" type="button" role="button" <%if(data[0][0].facebook_page!="" && data[0][0].facebook_page!=null){%>href="<%=data[0][0].facebook_page%>"<%}%>><i class="fab fa-facebook-f"></i></a> <%if(data[0][0].facebook_page=="" || data[0][0].facebook_page==null){%>لا يوجد صفحة<%}else{%><%=data[0][0].facebook_page.replace("http://","").replace("https://","").replace("www.","").replace("facebook.com","")%><%}%></li>
+    <li class="list-group-item py-1"><a class="btn-floating btn-sm btn-tw waves-effect waves-light" type="button" role="button" <%if(data[0][0].twitter_page!="" && data[0][0].twitter_page!=null){%>href="<%=data[0][0].twitter_page%>"<%}%>><i class="fab fa-twitter"></i></a> <%if(data[0][0].twitter_page=="" || data[0][0].twitter_page==null){%>لا يوجد صفحة<%}else{%><%=data[0][0].twitter_page.replace("http://","").replace("https://","").replace("www.","").replace("twitter.com","")%><%}%></li>
+  </ul>
+ 
+</div>
+	</div>
+	<div class="col-md-9">
+		<!-- Classic tabs -->
+<div class="classic-tabs mt-1">
+
+  <ul class="nav tabs-cyan tabs-white text-dark mx-0 px-0" id="myClassicTabShadow" role="tablist" style="background: #ECF0F2 !important">
+    <li class="nav-item mx-0">
+      <a class="nav-link  waves-light active show w_600 text-dark"  data-toggle="tab" href="#series-classic-shadow" role="tab" aria-controls="profile-classic-shadow" aria-selected="true">المشاريع <span class="badge badge-danger mr-2"><%=data[3].length%></span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link waves-light w_600 text-dark"  data-toggle="tab" href="#members-classic-shadow" role="tab" aria-controls="follow-classic-shadow" aria-selected="false">الأعضاء <span class="badge badge-danger mr-2"><%=data[4].length%></span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link waves-light w_600 text-dark"  data-toggle="tab" href="#relases-classic-shadow" role="tab" aria-controls="relases-classic-shadow" aria-selected="false">الإضافات <span class="badge badge-danger mr-2"><%=data[5].length%></span></a>
+    </li>
+  </ul>
+
+  <div class="tab-content card" id="myClassicTabContentShadow">
+    <div class="tab-pane fade active show" id="series-classic-shadow" role="tabpanel" aria-labelledby="profile-tab-classic-shadow">
+    	<%var j=0;data[3].forEach(function(one_row,index){%>
+     <%if(index%4==0){%><div class="card-deck mt-3"><%}%>
+
+     	<div class="card booking-card"><div class="card-body"><h4 class="card-title font-weight-bold points_overflow"><%=one_row.series_name%></h4><hr class="my-4"><p class="lead mb-1"><strong>التصنيفات</strong></p><div class="d-block w-100 mb-3"><%one_row.classifecation.split(",").forEach(function(clas,index){%>
+             <span class="badge badge-primary mx-1 pointer" onclick="show_class('<%=clas%>')"><%=clas%></span>
+     		<%})%></div><a href="/manga/<%=one_row.id%>" class="btn btn-primary py-2 mx-0 mb-0">تفاصيل</a></div></div>
+
+     <%j++;if(j==4 || data[3].length-1==index){%></div><%;j=0}})%>
+
+     
+    </div>
+    <div class="tab-pane fade" id="members-classic-shadow" role="tabpanel" aria-labelledby="follow-tab-classic-shadow">
+      
+      	<%var j=0;data[4].forEach(function(one_row,index){%>
+     <%if(index%4==0){%><div class="card-deck mt-3"><%}%>
+
+<!-- Card -->
+<div class="card testimonial-card pointer" onclick="location.href='/profile/<%=one_row.user_id%>'">
+
+  <!-- Background color -->
+  <div class="card-up indigo lighten-1"></div>
+
+  <!-- Avatar -->
+  <div class="avatar mx-auto white">
+    <img src="<%=one_row.profile_photo%>" class="rounded-circle" alt="woman avatar">
+  </div>
+
+  <!-- Content -->
+  <div class="card-body">
+    <!-- Name -->
+    <h4 class="card-title"><%=one_row.username%></h4>
+    <hr>
+    <!-- Quotation -->
+    <p><%=one_row.type%></p>
+  </div>
+
+</div>
+<!-- Card -->
+     	
+
+     <%j++;if(j==4 || data[4].length-1==index){%></div><%;j=0}})%>
+      	
+      
+    </div>
+
+    <div class="tab-pane fade" id="relases-classic-shadow" role="tabpanel" aria-labelledby="relases-classic-shadow">
+    		<%var j=0;data[5].forEach(function(one_row,index){%>
+     <%if(index%4==0){%><div class="card-deck mt-3"><%}%>
+
+<div class="card ">
+
+  <!-- Card image -->
+  <div class="view overlay">
+    <div class="w-100  danger-color text-white text-center py-4" style="font-size:80px"><i class="fas fa-book-open"></i></div>
+    <a>
+      <div class="mask rgba-white-slight waves-effect waves-light"></div>
+    </a>
+  </div>
+
+
+
+  <!-- Card content -->
+  <div class="card-body">
+
+    <!-- Title -->
+    <h4 class="card-title text-center pointer" onclick="location.href='/manga/<%=one_row.series_number%>'"><%=one_row.series_name%></h4>
+    <hr>
+     <h6 class="card-title text-center pointer" onclick="location.href='/reader/<%=one_row.chapter_id%>'">الفصل رقم <%=one_row.chapter_number%></h6>
+
+
+   
+
+  </div>
+
+
+
+</div>
+     	
+
+     <%j++;if(j==4 || data[5].length-1==index){%></div><%;j=0}})%>
+     
+     	
+     
+    </div>
+    
+  </div>
+
+</div>
+<!-- Classic tabs -->
+	</div>
+</div>
+
+
+
+
+
+
+
+</main>
+<%- include footer %>
+<%- include scripts %>
+<script type="text/javascript">
+	$("#wallpaper_file_trigger").on("click",function(){$("#wallpaper_file").click()})
+	   $(document).on("change","#wallpaper_file", function(e){
+    
+
+    if(this.files[0].size/1024/1024 > 5){
+       toastr.error("حجم الملف يجب أن لا يتجاوز 5 ميجا")
+       this.value = "";
+    }else{
+
+      var ext = this.value.match(/\.([^\.]+)$/)[1];
+    switch(ext)
+    {
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+        case 'gif':
+            upload_photo();
+            break;
+        default:
+            toastr.error('صيغة الملف غير مقبولة')
+            this.value='';
+    }
+
+
+    };
+
+
+
+
+})
+
+   function upload_photo()
+   {
+
+
+  var form = new FormData($("#wallpaper_form")[0]);
+  $.ajax({
+        url: "/upload_team_wallpaper",
+        method: "POST",
+        dataType: 'html',
+        data: form,
+        processData: false,
+        contentType: false,
+        success: function (result){if(result==1){location.reload()}else{toastr.error(result)}}
+});
+}
+
+
+function join_or_disjoin()
+{
+	$.post("/join_or_disjoin",{id:<%=data[0][0].id%>},function(data){if(data.type=="error"){toastr.error(data.body);}else if(data.type=="success"){$("#join_button").html(data.body)}})
+}
+
+</script>
+</body>
+
+</html>

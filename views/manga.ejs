@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+<title><%=data[0][0].series_name%>-mymanga</title>
+<%- include styles %>
+<style type="text/css">
+.shift_top {margin-top:-50% !important;}
+.manga_label {color:#6a6aa9;}	
+.next_name_info span {border-left: 1px solid grey;}
+.next_name_info span:first-child {padding-right: 0px !important;}
+.next_name_info span:last-child {padding-left: 0px !important;border-left: none;}
+.badge_pa {padding: 5px 10px !important}
+.hide {display: none !important}
+.body {overflow-x: hidden !important;}
+.under_line {text-decoration: underline !important;}
+.folder_pointer {float: right}
+</style>
+</head>
+
+
+<body class="light-blue-skin">
+<%- include header %>
+<main class="content container-fluid mt-10">
+<div  class="row">
+
+
+
+
+
+<div class="view overlay zoom d-block w-100 card animated fadeInDown slow" style="margin-top: -30px">
+    <img src="<%=data[0][0].wallpaper%>" class="img-fluid w-100" style="height:400px !important;object-fit: cover;" alt="Responsive image">
+    <%if(data[4].length>0){%>
+    <div class="mask flex-center rgba-black-strong pointer rtl waves-effect waves-light" id="wallpaper_file_trigger">
+        <div class="white-text"><i class="fas fa-cloud-upload-alt" style="font-size:40px"></i> </div>
+        <div class="white-text mr-2 w_600"> تعديل الخلفية</div>
+    </div>
+    <form id="wallpaper_form">
+    <input type="file" name="wallpaper" style="display: none" id="wallpaper_file">
+    <input type="hidden" name="id" value="<%=data[0][0].id%>">
+    </form>
+
+    <%}%>
+    
+    
+</div>
+<div class="row rtl w-100 m-0 mb-2 px-2 ">
+<div class="col-lg-3">
+<img src="<%=data[0][0].series_profile%>" alt="thumbnail" class="img-thumbnail w-75 d-block mx-auto rounded-0 shift_top animated fadeInRight slow card">
+<%if(data[0][0].this_user>0){%>
+<div class="text-center w-100"><a class="btn-floating btn-info my-4 text-center" onclick="get_series_modal(<%=data[0][0].id%>)"><i class="fas fa-cog"></i></a></div>
+<%}%>
+
+
+ <div class="btn-group ltr my-3 d-block  text-center d-flex justify-content-center" role="group" aria-label="Basic example">
+  <button type="button" class="btn btn-pink btn-rounded py-2 px-3 <%data[2].forEach(function(reaction,index){%><%if(reaction.reaction==7){%>active<%}%><%})%>" id="like_button" onclick="like()"><i class="fas fa-heart"></i> <%=data[0][0].likes%></button>
+  <div class="btn-group" role="group">
+     <button id="btnGroupDrop1" type="button" class="btn btn-pink btn-rounded py-2 px-3 <%data[2].forEach(function(reaction,index){%><%if(reaction.reaction==1 || reaction.reaction==2 || reaction.reaction==3 || reaction.reaction==4 || reaction.reaction==5){%>active<%}%><%})%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fas fa-bookmark"></i> <%=data[0][0].all_reading_reactions_counts%>
+    </button>
+    <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="btnGroupDrop1">
+      <div class="dropdown-item" onclick="read_mode(1)">أقرأها</div>
+	  <div class="dropdown-item" onclick="read_mode(2)">أنوي قرائتها</div>
+	  <div class="dropdown-item" onclick="read_mode(3)">أجلت قرأتها</div>
+	  <div class="dropdown-item" onclick="read_mode(5)">توقفت عن قرأتها</div>
+	  <div class="dropdown-item" onclick="read_mode(4)">أكملت قرأتها</div>
+    </div>
+  </div>
+
+   <div class="btn-group" role="group">
+     <button id="btnGroupDrop1" type="button" class="btn btn-pink btn-rounded py-2 px-3 <%data[2].forEach(function(reaction,index){%><%if(reaction.reaction==11 || reaction.reaction==12 || reaction.reaction==13 || reaction.reaction==14 || reaction.reaction==15){%>active<%}%><%})%>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fas fa-star"></i> <%=data[0][0].star_reactions_count%>
+    </button>
+    <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="btnGroupDrop1">
+      <div class="dropdown-item">
+        <div class="d-flex justify-content-center">
+    <span class="font-weight-bold indigo-text mr-2 mt-1">1</span>
+        <form class="range-field w-100">
+            <input type="range" min="1" max="5" onchange="rank_reaction($(this).val())" />
+        </form>
+    <span class="font-weight-bold indigo-text ml-2 mt-1">5</span>
+</div>
+      	
+      </div>
+    </div>
+  </div>
+  <button type="button" class="btn btn-pink btn-rounded py-2 px-3"><i class="fas fa-eye"></i> <%=(data[0][0].seen_count || 0)%></button>
+ </div>
+
+
+
+
+
+
+
+
+<div class="row rtl mt-4 w-100 bg-white m-0 z-depth-1">
+	<div class="col-md-6 p-0"><canvas id="pieChart" class="position-relative" style="top:50%;transform: translate(0,-50%);"></canvas></div>
+	<div class="col-md-6 p-0">
+		<ul class="list-group w-100 m-0 p-0 text-center f12 text-white">
+            <li class="list-group-item py-2" style="background:#6fc1ea ">يقرأها</li>
+        	<li class="list-group-item py-2" style="background:#48c76d ">ينوي قرأتها</li>
+        	<li class="list-group-item py-2" style="background:#615ae8 ">أجل قرائتها</li>
+        	<li class="list-group-item py-2" style="background:#f7464a ">أكمل قرأتها</li>
+        	<li class="list-group-item py-2" style="background:#fba640 ">توقف عن قرأتها</li>
+  
+</ul>
+	</div>
+</div>
+ 
+<div class="z-depth-1 mt-3 p-2 rtl text-right"  style="background: white">
+  <div class="py-2 text-right mb-2 px-2" style="border-bottom:solid 1px #ddd">
+    الفرق المترجمة
+  </div>
+  <%data[3].forEach(function(team,index){%>
+<a href="/team/<%=team.id%>" class="badge badge-primary py-2 my-1"><%=team.team_name%></a>
+  <%})%>
+</div>
+
+
+
+
+</div>
+<div class="col-lg-9   mt-3 ">
+<%if(data[0][0].checked==0){%>
+<div class="alert alert-danger rtl text-right" role="alert"><i class="fas fa-exclamation-triangle"></i> هذه السلسلة لم توافق عليها الإدارة بعد</div>
+<%}%>
+
+<div class="pt-2  text-right rtl f30 w_600 manga_label animated fadeInDown slow">
+<%=data[0][0].series_name%>
+<span class="text-warning"><%-data[0][0].rank.stars%></span>
+</div>
+<div class="mb-2 w_600 f12 blue-grey-text rtl text-right animated fadeInDown slow"><%=data[0][0].series_author%></div>
+<div class="pb-4 next_name_info f12 blue-grey-text rtl text-right w_600 animated fadeInDown slow"><span class="px-3"><%=data[0][0].chapters%> فصول</span><span class="px-3"><%=data[0][0].status_of_manga%></span><span class="px-3">الترتيب <%=data[1][0].rank%></span>	</div>	
+<div class="manga_label w_600 rtl text-right animated fadeInDown slow">التصنيفات</div>
+<div class="text-right fadeInDown slow animated">
+	<%data[0][0].classifecation.split(",").forEach(function(clas,index){%>
+     <span class="badge  light-blue darken-4  f11  badge_pa  ml-2 pointer" onclick="show_class('<%=clas%>')"><%=clas%></span>
+	<%})%>
+	
+</div>
+<div class="manga_label w_600 rtl text-right mt-4 animated slow fadeInDown">قصة المانغا</div>
+<div class="text-right f13 blue-grey-text rtl mb-3 animated slow fadeInDown">
+	<%if(data[0][0].series_description=="" || data[0][0].series_description==null){%>لا يوجد قصة لهذه السلسلة<%}else{%><%=data[0][0].series_description%><%}%>
+</div>
+
+
+
+<div class="row w-100 py-3 animated fadeInDown slow hide">
+
+<div class="col-md-6 row">
+	
+<div class="col-6"><div class="manga_label manga_label w_600 rtl text-right py-2">الإسم بالعربي</div><div class="text-right f13 blue-grey-text rtl">
+<%if(data[0][0].series_arabic_name=="" || data[0][0].series_arabic_name==null){%>لا يوجد<%}else{%><%=data[0][0].series_arabic_name%><%}%>	
+</div></div>
+<div class="col-6"><div class="manga_label manga_label w_600 rtl text-right py-2">أسماء أخرى</div><div class="text-right f13 blue-grey-text rtl">
+<%if(data[0][0].series_other_names=="" || data[0][0].series_other_names==null){%>لا يوجد<%}else{%><%=data[0][0].series_other_names%><%}%>	
+</div></div>	
+    
+</div>
+<div class="col-md-6 row">
+<div class="col-6"><div class="manga_label manga_label w_600 rtl text-right py-2">نوع المانجا</div><div class="text-right f13 blue-grey-text rtl">
+	<%if(data[0][0].type=="" || data[0][0].type==null){%>لا يوجد<%}else{%><%=data[0][0].type%><%}%>	
+</div></div>
+<div class="col-6"><div class="manga_label manga_label w_600 rtl text-right py-2">الفئة العمرية</div><div class="text-right f13 blue-grey-text rtl">
+	<%if(data[0][0].age=="" || data[0][0].age==null){%>لا يوجد<%}else{%><%=data[0][0].age%><%}%>	
+</div></div>	
+</div>	
+</div>
+
+	
+
+
+<div class="row w-100 py-3 animated fadeInDown slow hide">
+<div class="row col-md-6">
+	<div class="col-6"><div class="manga_label manga_label w_600 rtl text-right py-2">سنة الإصدار</div><div class="text-right f13 blue-grey-text rtl">
+		<%if(data[0][0].series_product_date=="" || data[0][0].series_product_date==null){%>لا يوجد<%}else{%><%=data[0][0].series_product_date%><%}%>
+	</div></div>
+<div class="col-6"><div class="manga_label manga_label w_600 rtl text-right py-2">عدد المجلدات</div><div class="text-right f13 blue-grey-text rtl">
+	<%=data[0][0].folders%>
+</div></div>
+</div>
+<div class="row col-md-6">
+	<div class="col-6"><div class="manga_label manga_label w_600 rtl text-right py-2">تقييم mal</div><div class="text-right f13 blue-grey-text rtl">
+		<%if(data[0][0].mal=="" || data[0][0].mal==null){%>لا يوجد<%}else{%><%=data[0][0].mal%><%}%>
+	</div></div>
+<div class="col-6"><div class="manga_label manga_label w_600 rtl text-right py-2">الراسم</div><div class="text-right f13 blue-grey-text rtl">
+	<%if(data[0][0].series_painter=="" || data[0][0].series_painter==null){%>لا يوجد<%}else{%><%=data[0][0].series_painter%><%}%>
+</div></div>	
+</div>
+
+
+</div>
+
+<div class="hide">
+<div class="manga_label w_600 rtl text-right animated slow fadeInDown">المصادر</div>
+<div class="text-right fadeInDown slow animated">
+<%data[0][0].source.forEach(function(cls,index){%>
+<a href="<%=cls.source_link%>"><span class="badge  light-blue darken-4 badge_pa  ml-2  f11 pointer"><%=cls.source_name%></span></a>
+<%})%>
+</div>
+</div>
+<button type="button" class="btn btn-info btn-sm d-block mx-auto mt-5 rtl" id="more_button" style="width:250px;"><i class="fas fa-angle-down"></i> المزيد</button>
+
+<ul class="nav md-pills pills-secondary bg-white mt-3 f11 nav-justified mx-0 px-0" style="box-shadow: 0px 0px 0px 1px #ddd;" role="tablist">
+          <li class="nav-item waves-effect waves-light">
+            <a class="nav-link active" id="home-tab-md" data-toggle="tab" href="#chapters_tab" role="tab" aria-controls="home-md" aria-selected="true"><i class="fas fa-book-open"></i> الفصول</a>
+          </li>
+          <li class="nav-item waves-effect waves-light">
+            <a class="nav-link" id="comments_tab_trigger" data-toggle="tab" href="#comments_tab" role="tab" aria-controls="profile-md" aria-selected="false"><i class="fas fa-comments-alt"></i> التعليقات</a>
+          </li>
+</ul>
+
+<!-- Tab panels -->
+<div class="tab-content pt-3 px-0">
+
+  <!--Panel 1-->
+  <div class="tab-pane fade in show active" id="chapters_tab" role="tabpanel">
+
+
+<div class="w-100  light-blue darken-4  rounded py-2 px-3 w_600 text-white rtl text-right" style="overflow: hidden;">
+<span style="float: right">المجلدات :</span>
+<%if(data[0][0].folders_array!=null){%>
+<%data[0][0].folders_array.split(",").sort((a, b) => a - b).forEach(function(folder,index){%><span class="mx-1 pointer folder_pointer" onclick="get_chapters(<%=folder%>)"><%=folder%></span><%})%>
+<%}%> 
+</div>
+
+<div class="table-responsive">
+<!--Table-->
+<table id="tablePreview" class="table rtl text-right   z-depth-1" style="overflow: hidden;">
+<!--Table head-->
+  <thead>
+    <tr class="bg-white">
+      <th>الفصل</th>
+      <th class="d-none d-sm-table-cell">تاريخ الرفع</th>
+      <th class="d-none d-sm-table-cell">عدد مرات التحميل والمشاهدة</th>
+      <th>الرابط</th>
+    </tr>
+  </thead>
+  <!--Table head-->
+  <!--Table body-->
+  <tbody class="chapters_table">
+    
+  </tbody>
+  <!--Table body-->
+</table>
+<!--Table-->
+</div>
+
+  </div>
+  <!--/.Panel 1-->
+
+  <!--Panel 2-->
+  <div class="tab-pane fade" id="comments_tab" role="tabpanel">
+   <div class="card" id="comments_box">
+     
+   </div>
+  </div>
+  <!--/.Panel 2-->
+
+</div>
+
+
+
+</div>	
+</div>
+
+
+
+
+
+
+
+
+
+</main>
+<%- include footer %>
+<%- include scripts %>
+
+<script>
+  //pie
+  var ctxP = document.getElementById("pieChart").getContext('2d');
+  Chart.defaults.global.legend.display=false;
+  var myPieChart = new Chart(ctxP, {
+    type: 'pie',
+    data: {
+      labels: ["يقرأها", "ينوي قرأتها", "أجل قرائتها", "أكمل قرأتها", "توقف عن قرأتها"],
+      datasets: [{
+        data: [<%=data[0][0].reading%>,<%=data[0][0].want_read%>, <%=data[0][0].delay_read%>,<%=data[0][0].complete_read%>,<%=data[0][0].stop_read%>],
+        backgroundColor: ['#6fc1ea','#48c76d','#615ae8','#f7464a','#fba640']
+      }]
+    },
+    options: {
+      responsive: true
+    }
+  });
+$("#more_button").on("click",function(){$(".hide").removeClass("hide");$(this).remove()})
+$("#wallpaper_file_trigger").on("click",function(){$("#wallpaper_file").click()})
+$(".folder_pointer").click(function(){$(".folder_pointer").removeClass("under_line");$(this).addClass("under_line")})
+
+
+
+function get_chapters(folder_number){$.post("/get_chapters",{folder_number:folder_number,series:<%=data[0][0].id%>},render_chapters)}
+function render_chapters(data)
+{  $(".chapters_table").html("")
+	data.sort((a, b) => b.chapter_number - a.chapter_number).forEach(function(row,index)
+	{   var animated="fadeInLeft";if(index%2==0){animated="fadeInRight"}
+    var teams="";row.teams.split(",").forEach(function(team,index){teams+='<a href="/reader/'+row.ids.split(",")[index]+'" class="badge badge-primary badge_pa waves-effect" oid="'+row.ids.split(",")[index]+'">'+team+'</a>'})
+        $(".chapters_table").append('<tr class="bg-white animated  '+animated+'"><td class="w-25">'+row.chapter_number+' '+row.label+'</td><td class="w-25 d-none d-sm-table-cell">'+date(row.date)+'</td><td class="w-25 d-none d-sm-table-cell"><span class="mx-1 w_600"><i class="far fa-arrow-alt-circle-down"></i> '+row.download+'</span><span class="mx-1 w_600"><i class="fal fa-eye"></i> '+row.seen+'</span></td><td class="w-25">'+teams+'</td></tr>')
+	})
+}
+
+
+	   $(document).on("change","#wallpaper_file", function(e){
+    
+
+    if(this.files[0].size/1024/1024 > 5){
+       toastr.error("حجم الملف يجب أن لا يتجاوز 5 ميجا")
+       this.value = "";
+    }else{
+
+      var ext = this.value.match(/\.([^\.]+)$/)[1];
+    switch(ext)
+    {
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+        case 'gif':
+            upload_photo();
+            break;
+        default:
+            toastr.error('صيغة الملف غير مقبولة')
+            this.value='';
+    }
+
+
+    };
+
+
+
+
+})
+
+   function upload_photo()
+   {
+
+
+  var form = new FormData($("#wallpaper_form")[0]);
+  $.ajax({
+        url: "/upload_series_wallpaper",
+        method: "POST",
+        dataType: 'html',
+        data: form,
+        processData: false,
+        contentType: false,
+        success: function (result){if(result==1){location.reload()}else{toastr.error(result)}}
+});
+}
+
+
+function like(id)
+{   $("#like_button").toggleClass("active");
+	$.post("/like_manga",{id:<%=data[0][0].id%>},function(data){if(data==1){location.reload()}else{toastr.error(data)}})
+}
+
+
+function read_mode(option)
+{ 
+  $.post("/read_reaction",{option:option,manga:<%=data[0][0].id%>},function(data){if(data==1){location.reload()}else{toastr.error(data)}})
+}
+
+
+function rank_reaction(option)
+{
+   $.post("/rank_reaction",{option:option,manga:<%=data[0][0].id%>},function(data){if(data==1){location.reload()}else{toastr.error(data)}})
+}
+
+$(".folder_pointer").first().click()
+
+
+
+function date(date)
+{
+	var da=new Date(date);return da.getUTCFullYear()+"-"+(da.getUTCMonth()+1)+"-"+da.getUTCDate()
+}
+
+
+
+comment_system("#comments_box","series",<%=data[0][0].id%><%if(comment_id){%>,<%=comment_id%><%}%>)
+</script>
+
+
+
+</body>
+
+</html>

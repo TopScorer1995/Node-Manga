@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+<title>مشاهدة المانجا اون لاين  | MyManga - ماي مانجا</title>
+<%- include styles %>
+<style type="text/css">
+  .news_image {height:300px !important;object-fit: cover}
+  .main_continer {min-width:85% !important}
+  .close {display: none !important}
+  .img-con-small {width:100px !important;height:125px !important;object-fit: cover;}
+  .img-con-med {max-width:100% !important;max-height:155px !important;object-fit: cover;}
+</style>
+</head>
+
+<body class="light-blue-skin">
+<%- include header %>
+<main class="content container-fluid mt-5 px-0">
+
+
+<div id="news_carousel" class="carousel slide w-100 card" data-ride="carousel">
+  <div class="carousel-inner" >
+    <%data[0].forEach(function(row,index){%>
+
+<div class="carousel-item  <%if(index==0){%>active<%}%>" onclick="location.href='/new/<%=row.id%>'">
+      <div class="view pointer waves-light">
+        <img class="d-block w-100 news_image" src="<%=row.wallpaper%>" onclick="location.href='/new/<%=row.id%>'" alt="First slide">
+        <div class="mask rgba-black-light"></div>
+      </div>
+      <div class="carousel-caption">
+        <h3 class="h3-responsive rtl  pointer"><%=row.label%></h3>
+      </div>
+    </div>
+
+    <%})%>
+    
+    
+  </div>
+  <a class="carousel-control-prev" href="#news_carousel" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon rounded-circle bg-dark" style="width:50px;height:50px;border:solid 1px #ddd" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next "  href="#news_carousel" role="button" data-slide="next">
+    <span class="carousel-control-next-icon rounded-circle bg-dark" style="width:50px;height:50px;border:solid 1px #ddd" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+
+
+<div class="container main_continer rtl">
+
+<ul class="rtl nav nav-tabs nav-justified md-tabs indigo position-relative w-100 mx-0 f12" id="myTabJust" role="tablist" style="margin-top:-30px">
+  <li class="nav-item">
+    <a class="nav-link active" id="home-tab-just" data-toggle="tab" href="#home-just" role="tab" aria-controls="home-just" aria-selected="true">الكل</a>
+  </li>
+  <%for(var i=0;i<8;i++){%>
+    <%var hide_class="";if(i%2!=0){hide_class="d-none d-lg-block d-xl-block"}%>
+   <li class="nav-item <%=hide_class%>" style="white-space: nowrap;" onclick="show_class('<%=hint_array[i]%>')">
+    <a class="nav-link" id="home-tab-just" data-toggle="tab" href="#home-just" role="tab" aria-controls="home-just" aria-selected="false"><%=hint_array[i]%></a>
+  </li>
+  <%}%>
+</ul>
+  
+<div class="row mb-2" style="margin-top:70px">
+<div class="col-md-8">
+
+<div class="row">
+ <div class="col-md-12">
+    <div class="card mb-2">
+<div class="alert  clearfix my-0 rtl">
+  <div class="float-left f12  pointer waves-effect  text-warning" onclick="$('#realase_trigger').click()">المزيد <i class="fal fa-angle-double-left"></i></div>
+  <div class="float-right w_600 f13">أخر الإضافات</div>
+</div>
+</div>
+ </div> 
+</div>
+<div class="text-center">
+<nav aria-label="Page navigation example">
+  <ul class="pagination pg-blue m-0 p-0">
+    <li class="page-item" onclick="prev_releases_page()"><a class="page-link">السابق</a></li>
+    <span class="pager_continer" style="display: inherit;"></span>
+    <li class="page-item" onclick="next_releases_page()"><a class="page-link">التالي</a></li>
+    
+  </ul>
+</nav>
+</div>
+<div class="last_releases_continer"></div>
+
+     
+     
+
+
+<div class="mt-2 position-relative">
+
+                <div class="position-absolute w-100" style="z-index:4;height:0px;top:50%;transform: translate(0,-50%);-webkit-transform:translate(0,-50%)">
+            
+            <a class="carousel-control-prev text-dark p-0 m-0" href="#myCarousel" role="button" data-slide="prev" style="width:0px !important;opacity: 1 !important">
+              <div style="width:50px;height:50px" class="rounded-circle bg-white align-middle list-group-item">
+                <span class="fa fa-chevron-left" aria-hidden="true"></span> 
+              </div>
+            </a>
+          
+           
+            <a class="carousel-control-next  text-dark p-0 m-0" href="#myCarousel" role="button" data-slide="next" style="width:0px !important;opacity: 1 !important">
+               <div style="width:50px;height:50px" class="rounded-circle bg-white align-middle list-group-item">
+                <span class="fa fa-chevron-right" aria-hidden="true"></span>
+               </div>
+            </a>
+          
+        
+</div>  
+<div class="row">
+ <div class="col-md-12">
+    <div class="card mb-2">
+<div class="alert  clearfix my-0 rtl">
+  <div class="float-left f12  pointer waves-effect  text-warning" onclick="location.href='/library?most_watch=true'">المزيد <i class="fal fa-angle-double-left"></i></div>
+  <div class="float-right w_600 f13">الأكثر مشاهدة</div>
+</div>
+</div>
+ </div> 
+</div>
+<div class="row mb-2 position-relative">
+
+
+<div class="container text-center">
+    <div class="row mx-auto my-auto">
+        <div id="myCarousel" class="carousel slide w-100" data-ride="carousel">
+            <div class="carousel-inner" role="listbox">
+
+              <%var e=0;;var j=0;data[6].forEach(function(row,index){%>
+     <%if(index%6==0){%><div class="carousel-item <%if(j==0 && index==0){%>active<%}%>"><div class="row mb-2"><%}%>
+     <%if(e%3==0){%><div class="col-lg-6 row m-0 p-0"><%};e++%>
+       <div class="col-4 text-center px-1 m-0">
+    
+    
+   <img src="<%=row.series_profile%>" class="img-con-med img-thumbnail pointer"  onclick="location.href='/manga/<%=row.id%>'">
+    
+    
+    
+    
+    <div class="w_600 f13  mt-2 text-center rtl px-2 pointer hover_underline nowrap w-100 series_hint" oid="<%=row.id%>" style="overflow: hidden;text-overflow: ellipsis;" onclick="location.href='/manga/<%=row.id%>'"><%=row.series_name%></div>
+    <div class="text-center f10 one_row" style="color:gray"><%=row.series_author || 'بلا مؤلف'%></div>
+    
+  </div>
+     <%if(e==3 || data[6].length-1==index){e=0;%></div><%}%>
+     <%j++;if(j==6 || data[6].length-1==index){%></div></div><%;j=0}})%>
+
+
+              
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</div> 
+
+
+
+
+</div>  
+
+
+
+
+<div class="mt-2 position-relative">
+
+                <div class="position-absolute w-100" style="z-index:4;height:0px;top:50%;transform: translate(0,-50%);-webkit-transform:translate(0,-50%)">
+            
+            <a class="carousel-control-prev text-dark p-0 m-0" href="#trending" role="button" data-slide="prev" style="width:0px !important;opacity: 1 !important">
+              <div style="width:50px;height:50px" class="rounded-circle bg-white align-middle list-group-item">
+                <span class="fa fa-chevron-left" aria-hidden="true"></span> 
+              </div>
+            </a>
+          
+           
+            <a class="carousel-control-next  text-dark p-0 m-0" href="#trending" role="button" data-slide="next" style="width:0px !important;opacity: 1 !important">
+               <div style="width:50px;height:50px" class="rounded-circle bg-white align-middle list-group-item">
+                <span class="fa fa-chevron-right" aria-hidden="true"></span>
+               </div>
+            </a>
+          
+        
+</div>  
+<div class="row">
+ <div class="col-md-12">
+    <div class="card mb-2">
+<div class="alert  clearfix my-0 rtl">
+  <div class="float-left f12  pointer waves-effect  text-warning" onclick="location.href='/library?trending=true'">المزيد <i class="fal fa-angle-double-left"></i></div>
+  <div class="float-right w_600 f13">مانجا رائجة</div>
+</div>
+</div>
+ </div> 
+</div>
+<div class="row mb-2 position-relative">
+
+
+<div class="container text-center">
+    <div class="row mx-auto my-auto">
+        <div id="trending" class="carousel slide w-100" data-ride="carousel">
+            <div class="carousel-inner" role="listbox">
+
+              <%var e=0;;var j=0;data[5].forEach(function(row,index){%>
+     <%if(index%6==0){%><div class="carousel-item <%if(j==0 && index==0){%>active<%}%>"><div class="row mb-2"><%}%>
+     <%if(e%3==0){%><div class="col-lg-6 row m-0 p-0"><%};e++%>
+       <div class="col-4 text-center px-1 m-0">
+    
+    
+   <img src="<%=row.series_profile%>" class="img-con-med img-thumbnail pointer"  onclick="location.href='/manga/<%=row.id%>'">
+    
+    
+    
+    
+    <div class="w_600 f13  mt-2 text-center rtl px-2 pointer hover_underline nowrap w-100 series_hint" oid="<%=row.id%>" style="overflow: hidden;text-overflow: ellipsis;" onclick="location.href='/manga/<%=row.id%>'"><%=row.series_name%></div>
+    <div class="text-center f10 one_row" style="color:gray"><%=row.series_author || 'بلا مؤلف'%></div>
+    
+  </div>
+     <%if(e==3 || data[5].length-1==index){e=0;%></div><%}%>
+     <%j++;if(j==6 || data[5].length-1==index){%></div></div><%;j=0}})%>
+
+
+              
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</div> 
+
+
+
+
+</div>
+
+
+<div class="mt-2 position-relative">
+
+                <div class="position-absolute w-100" style="z-index:4;height:0px;top:50%;transform: translate(0,-50%);-webkit-transform:translate(0,-50%)">
+            
+            <a class="carousel-control-prev text-dark p-0 m-0" href="#recommanded" role="button" data-slide="prev" style="width:0px !important;opacity: 1 !important">
+              <div style="width:50px;height:50px" class="rounded-circle bg-white align-middle list-group-item">
+                <span class="fa fa-chevron-left" aria-hidden="true"></span> 
+              </div>
+            </a>
+          
+           
+            <a class="carousel-control-next  text-dark p-0 m-0" href="#recommanded" role="button" data-slide="next" style="width:0px !important;opacity: 1 !important">
+               <div style="width:50px;height:50px" class="rounded-circle bg-white align-middle list-group-item">
+                <span class="fa fa-chevron-right" aria-hidden="true"></span>
+               </div>
+            </a>
+          
+        
+</div>  
+<div class="row">
+ <div class="col-md-12">
+    <div class="card mb-2">
+<div class="alert  clearfix my-0 rtl">
+  <div class="float-left f12  pointer waves-effect  text-warning" onclick="location.href='/library?recommanded=true'">المزيد <i class="fal fa-angle-double-left"></i></div>
+  <div class="float-right w_600 f13">ينصح بقرأتها</div>
+</div>
+</div>
+ </div> 
+</div>
+<div class="row mb-2 position-relative">
+
+
+<div class="container text-center">
+    <div class="row mx-auto my-auto">
+        <div id="recommanded" class="carousel slide w-100" data-ride="carousel">
+            <div class="carousel-inner" role="listbox">
+
+              <%var e=0;;var j=0;data[3].forEach(function(row,index){%>
+     <%if(index%6==0){%><div class="carousel-item <%if(j==0 && index==0){%>active<%}%>"><div class="row mb-2"><%}%>
+     <%if(e%3==0){%><div class="col-lg-6 row m-0 p-0"><%};e++%>
+       <div class="col-4 text-center px-1 m-0">
+    
+    
+   <img src="<%=row.series_profile%>" class="img-con-med img-thumbnail pointer" onclick="location.href='/manga/<%=row.id%>'">
+    
+    
+    
+    
+    <div class="w_600 f13  mt-2 text-center rtl px-2 pointer series_hint hover_underline nowrap w-100" style="overflow: hidden;text-overflow: ellipsis;" onclick="location.href='/manga/<%=row.id%>'" oid="<%=row.id%>"><%=row.series_name%></div>
+    <div class="text-center f10 one_row" style="color:gray"><%=row.series_author || 'بلا مؤلف'%></div>
+    
+  </div>
+     <%if(e==3 || data[3].length-1==index){e=0;%></div><%}%>
+     <%j++;if(j==6 || data[3].length-1==index){%></div></div><%;j=0}})%>
+
+
+              
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+</div> 
+
+
+
+
+
+</div>
+
+
+<div class="row">
+ <div class="col-md-12">
+    <div class="card mb-2">
+<div class="alert  clearfix my-0 rtl">
+  <div class="float-left f12  pointer waves-effect  text-warning" onclick="location.href='/library?recent=true'">المزيد <i class="fal fa-angle-double-left"></i></div>
+  <div class="float-right w_600 f13">أخر السلاسل المضافة</div>
+</div>
+</div>
+ </div> 
+</div>
+
+<%var e=0;;var j=0;data[2].forEach(function(row,index){%>
+     <%if(index%6==0){%><div class="row mb-2 px-3"><%}%>
+     <%if(e%3==0){%><div class="col-lg-6 row m-0 p-0"><%};e++%>
+       <div class="col-4 text-center px-1 m-0">
+    
+    
+   <img src="<%=row.series_profile%>" class="img-con-med img-thumbnail pointer" onclick="location.href='/manga/<%=row.id%>'" >
+    
+    
+    
+    
+    <div class="w_600 f13 series_hint  mt-2 text-center rtl px-2 pointer hover_underline nowrap w-100" style="overflow: hidden;text-overflow: ellipsis;" onclick="location.href='/manga/<%=row.id%>'" oid="<%=row.id%>"><%=row.series_name%></div>
+
+  </div>
+     <%if(e==3 || data[2].length-1==index){e=0;%></div><%}%>
+     <%j++;if(j==6 || data[3].length-1==index){%></div><%;j=0}})%>
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+<div class="col-md-4">
+  <div class="card mb-2">
+<div class="alert  clearfix my-0 rtl">
+  <div class="float-left f12  pointer waves-effect  text-warning" id="more_reading_now">المزيد <i class="fal fa-angle-double-left"></i></div>
+  <div class="float-right w_600 f13">يقرأ الأن</div>
+</div>
+
+
+</div>
+
+
+
+<ul class="list-group px-0">
+  <%data[7].forEach(function(row,index){%>
+
+  <li class="waves-effect  d-flex  align-items-center my-2">
+    <span class="badge badge-primary badge-pill ml-3"><%=index+1%></span>
+    <img src="<%=row.series_profile%>" class="img-con-small rounded img-thumbnail" onclick="location.href='/manga/<%=row.series_number%>'">
+    <div class="mr-3 f17">
+      <div class="w_600    text-right rtl nowrap  pointer hover_underline" onclick="location.href='/manga/<%=row.series_number%>'"><%=row.series_name%></div>
+      <div class="f11 rtl text-right nowrap"><span style="color:gray">المؤلف :</span> <%=row.series_author || 'لا يوجد مؤلف'%></div>
+  <div class="f11 rtl text-right nowrap"><span style="color:gray">بواسطة :</span> <span class="pointer hover_underline " style="color:black" onclick="location.href='/team/<%=row.by_team%>'"><%=row.team_name%></span></div>
+      <div class="text-right f13  hover_underline pointer mt-1 nowrap" style="color:gray" onclick="location.href='/reader/<%=row.id%>'"><i class="fas fa-circle text-info  pl-1" style="font-size:9px"></i> الفصل <%=row.chapter_number%> <%=row.chapter_label%></div>
+    </div>
+    
+  </li>
+
+  <%})%>
+  
+  
+</ul>
+
+
+<div class="card mb-0 my-2">
+<div class="alert  clearfix my-0 rtl">
+  <div class="float-right w_600 f13 w-100 text-center">أخر التعليقات</div>
+</div>
+</div>
+<ul class="m-0 p-0 list-group-item">
+  <%data[8].forEach(function(row,index)
+  {%>
+    <div class="px-3 py-2 my-2">
+    <li class="rtl text-right d-flex align-items-center" onclick="location.href='<%=row.link%>'">
+    <img src="<%=row.profile_photo%>" class="rounded-circle  img-thumbnail"  onclick="location.href='<%=row.link%>'" style="width:70px!important;height:70px!important">
+    <div class="mr-2 w-75">
+      <a class="name f12" href="/profile/<%=row.by_member%>"><%=row.username%></a> <span class="date time_ago_dom f10 text-default" when="<%=row.add_date%>"></span>
+      <div class=d-flex align-items-center"><span class="badge badge-primary  h-100 py-1" style="font-size:9px">علق على <%=row.type%></span></div>
+      <div class="added-text  mw-100 f11 mt-1 w-100 one_row"><%-row.body%></div>
+    </div>
+  </li>
+</div>
+
+  <%})%>
+  
+</ul>
+
+</div> 
+
+</div>
+
+
+
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="manga_box_info_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title d-block w-100 rtl text-right w_600" id="detail_head"></h5>
+
+      </div>
+      <div class="modal-body rtl text-right f12" id="detail_body">
+       
+      </div>
+      <div class="modal-footer d-block rtl text-right" id="detail_footer">
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+<%- include footer %>
+<%- include scripts %>
+ <script type="text/javascript" src="/js/clamp.js"></script>
+ <script type="text/javascript">
+ 	var header=$(".one_row");
+    for(var i=0;i<header.length;i++)
+    {  row=$(".one_row").get(i);
+       $clamp(row,{clamp: 1});  
+    }
+   $(".sitck_class").sticky({topSpacing:0, stopper: "#main_footer",startScrolling :"bottom"});
+
+   $(document).on('click', '[data-toggle="detail_box"]', function(event) {
+               var this_manga=$(this);
+              $("#detail_body").html(this_manga.attr("detail_body"))
+              $("#detail_head").html(this_manga.attr("detail_head"))
+              $("#detail_footer").html(this_manga.attr("detail_footer"))
+               $("#manga_box_info_modal").modal("show")
+               
+            });
+$(document).ready(function()
+{
+  set_when()
+})
+
+
+function get_releases(number)
+{ $(".pager_continer").html("");
+  
+  get_releases_page(number);
+pagination(number,<%=Math.ceil((data[1][0].chapters_count || 0)/18)%>).forEach(function(array_number,index){var click_event="";if(!isNaN(array_number) && array_number!=number){click_event="get_releases("+array_number+")"};var active="";if(number==array_number){active="active"}$(".pager_continer").append('<li onclick="'+click_event+'" class="page-item '+active+'"><a class="page-link">'+array_number+'</a></li>')})
+}
+get_releases(1)
+function pagination(c, m) {
+    var current = c,
+        last = m,
+        delta = 2,
+        left = current - delta,
+        right = current + delta + 1,
+        range = [],
+        rangeWithDots = [],
+        l;
+
+    for (let i = 1; i <= last; i++) {
+        if (i == 1 || i == last || i >= left && i < right) {
+            range.push(i);
+        }
+    }
+
+    for (let i of range) {
+        if (l) {
+            if (i - l === 2) {
+                rangeWithDots.push(l + 1);
+            } else if (i - l !== 1) {
+                rangeWithDots.push('...');
+            }
+        }
+        rangeWithDots.push(i);
+        l = i;
+    }
+
+    return rangeWithDots;
+}
+
+function next_releases_page(){$(".pager_continer").children("li.page-item.active").next().click();}
+function prev_releases_page(){$(".pager_continer").children("li.page-item.active").prev().click();}
+function get_releases_page(number){$.post("/last_releases_page",{index:number},function(data)
+{   $(".last_releases_continer").html("");
+    var e=0;
+    var j=0;
+    console.log(data.length)
+    var rows=""
+    data.forEach(function(row,index)
+    { 
+      if(j%6==0){rows+='<div class="row mb-2 px-3">'}
+      if(e%3==0){rows+='<div class="col-lg-6 row m-0 p-0">'}
+      e++;
+      j++;
+
+      rows+='<div class="col-4 text-center px-1 m-0"><img src="'+row.series_profile+'" class="img-con-med img-thumbnail pointer" onclick="location.href=\'/manga/'+row.series_number+'\'"><div class="w_600 f13  mt-2 text-center rtl px-2 pointer series_hint hover_underline nowrap w-100"  style="overflow: hidden;text-overflow: ellipsis;" onclick="location.href=\'/manga/'+row.series_number+'\'" oid="'+row.series_number+'">'+row.series_name+'</div><div class="text-center f10 hover_underline pointer w-100 nowrap" style="color:gray;overflow: hidden;;text-overflow: ellipsis;" onclick="location.href=\'/reader/'+row.id+'\'"><i class="fas fa-circle text-info" style="font-size:9px"></i> الفصل '+row.chapter_number+' '+row.chapter_label+'</div><div class="w_600 f10   text-center rtl px-2 w-100 nowrap" style="overflow: hidden;;text-overflow: ellipsis;"><span style="color:gray">بواسطة</span> <span class="pointer hover_underline" onclick="location.href=\'/team/'+row.by_team+'\'">'+row.team_name+'</span></div></div>'
+
+      if(e==3 || data.length-1==index){e=0;rows+='</div>'}
+      if(j==6 || data.length-1==index){j=0;;rows+='</div>'}
+      if(data.length-1==index){console.log(rows);$(".last_releases_continer").html(rows)}
+    })
+    
+})}
+
+
+
+
+
+ </script>
+
+</body>
+
+</html>

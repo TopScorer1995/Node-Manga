@@ -1,0 +1,134 @@
+<!-- Modal -->
+<div class="modal fade" id="session_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jodit/3.1.39/jodit.min.css">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="card rtl text-right">
+          <div class="f12 p-2 d-flex d-flex justify-content-between align-items-center">
+            <span class="w_600" style="max-width:300px;overflow: hidden;text-overflow: ellipsis;"><%=data[0][0].subject%></span>
+            <%if(data[1].length>0){%>
+            <span class="btn-floating btn-sm   my-0 session_options_button">
+             <i class="fas fa-bars px-2 session_toggler_icon" style="font-size:13px;color:black"></i>
+            </span>
+
+            <%}else{%>
+             <span class="badge badge-primary"><%=data[0][0].status_text%></span>
+            <%}%>
+
+          </div>
+          <%if(data[1].length>0)
+          {%>
+
+            <form class="session_options_form" style="display: none">
+            <hr class="m-0 mb-2 mx-2">
+
+
+            <div class="clearfix m-2">
+        <span class="float-left"><div class="switch f13 text-right rtl">
+  <label class="mb-0 mt-1">
+    
+    <input type="checkbox" name="close" <%if(data[0][0].status==1){%>checked<%}%>>
+    <span class="lever"></span>
+  </label>
+</div></span>
+        <span class="float-right f12 rtl" style="line-height: 1.8">إغلاق الجلسة</span>
+        </div>
+
+        <div class="clearfix m-2">
+        <span class="float-left"><div class="switch f13 text-right rtl">
+  <label class="mb-0 mt-1">
+    
+    <input type="checkbox" name="delete">
+    <span class="lever"></span>
+  </label>
+</div></span>
+        <span class="float-right f12 rtl" style="line-height: 1.8">حذف الجلسة</span>
+        </div>
+        <div class="text-center">
+        <button type="button" class="btn btn-primary mt-2 btn-sm" onclick="session_options_form_send()">تأكيد</button>
+        </div>
+   <input type="hidden" name="id" value="<%=data[0][0].id%>">
+          </form>
+
+          <%}%>
+          
+          <hr class="m-0 mb-2 mx-2 ">
+          <div class="text-center"><button type="button" class="btn btn-light btn-sm" onclick="get_session_messages()">المزيد</button></div>
+          <div class="session_message_area px-2" style="max-height:400px;overflow: auto">
+
+           
+          </div>
+         
+          <form>
+          <div class="texting_area"></div>
+          
+          </form>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jodit/3.1.39/jodit.min.js"></script>
+
+  <script type="text/javascript">
+  var one_sessions_index=0;
+  var editor
+$(".session_options_button").on("click",function(){$(".session_toggler_icon").toggleClass("fa-bars");$(".session_toggler_icon").toggleClass("fa-times");$(".session_options_form").slideToggle("fast")})
+
+
+<%if(data[1].length==0 && data[0][0].status==0 && data[0][0].add_by==myid)
+{%>
+  
+  set_texting_form(1)
+
+<%}else if(data[1].length>0 && data[0][0].status==0){%>
+
+set_texting_form(0)
+
+<%}%>
+
+
+function session_options_form_send(){$.post("/session_options_form",$(".session_options_form").serialize(),function(data){if(data==1 || data==2){$("#session_modal").modal('hide')}else {set_texting_form(0);toastr.info('تمت العملية بنجاح');}})}
+
+ function get_session_messages(){$.post("/get_session_messages",{index:one_sessions_index,id:<%=data[0][0].id%>},function(data){data.forEach(function(row,index){$(".session_message_area").prepend('<div class="media ltr text-right my-1"><div class="media-body"><h5 class="mt-1 mb-1 font-weight-bold f13 pointer" onclick="location.href=\'/profile/'+row.add_by+'\'">'+row.username+'</h5> <span class="f12">'+row.body+'</span></div> <img class="d-flex ml-3 img-thumbnail img70x70" src="'+row.profile_photo+'" alt="Generic placeholder image"></div>')});one_sessions_index++;})}   
+ get_session_messages();
+
+
+ function set_texting_form(op)
+ {
+  if(op==1)
+  {
+     $('.texting_area').html('<form><div class="md-form px-2 my-2"><textarea type="text"  class="md-textarea session_message form-control f13" rows="3" placeholder="إضافة رسالة"></textarea></div><div class="btn btn-primary btn-sm" onclick="send_message_content()">إرسال</div></form>')
+  }else
+  {
+    $(".texting_area").html('<form><div class="session_wysi"></div></div><div class="btn btn-primary btn-sm" onclick="send_message_content()">إرسال</div></form>');
+
+    setTimeout(function()
+  {
+
+     editor = new Jodit(".session_wysi", {
+  "spellcheck": false,
+  "language": "ar",
+  "toolbarButtonSize": "small",
+  "toolbarSticky": false
+});
+
+  },1000);
+
+  }
+ }
+
+
+
+ function send_message_content()
+ {
+   var message;if(editor){message=editor.getEditorValue()}else{message=$(".session_message").val()};
+   if(editor){editor.setEditorValue('')}else{$(".session_message").val('')};
+   $.post("/session_message",{message:message,id:<%=data[0][0].id%>},function(data){if(typeof data === 'object'){$(".session_message_area").append('<div class="media ltr text-right my-1"><div class="media-body"><h5 class="mt-1 mb-1 font-weight-bold f13 pointer" onclick="location.href=\'/profile/'+data.add_by+'\'">'+data.username+'</h5> <span class="f12">'+data.message+'</span></div> <img class="d-flex ml-3 img-thumbnail img70x70" src="'+data.profile_photo+'" alt="Generic placeholder image"></div>');$(".session_message_area").scrollTop($(".session_message_area")[0].scrollHeight);
+}else{toastr.error(data)}})
+
+ }
+  </script>
+</div>

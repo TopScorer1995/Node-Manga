@@ -1,0 +1,94 @@
+<header class="fixed-top">
+    <div class="progress md-progress mb-0">
+    <div class="progress-bar primary-color" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+
+  <nav class="navbar navbar-expand-sm rtl">
+   
+  <a class="navbar-brand in_color <%if(uid!="none"){%>d-none d-lg-block d-xl-block<%}else{%>d-md-none  d-lg-block<%}%> " href="#"><img src="/mymanga.png"></a>
+  <!--Dropdown primary-->
+  <div class="dropdown  d-md-none d-sm-block d-xs-block">
+
+    <!--Trigger-->
+    <a class="btn-floating btn-sm  waves-effect waves-light round_nav_button" type="button" id="dropdownMenu2" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false"><i class="fas fa-bars"title="الأقسام"></i></a>
+
+
+    <!--Menu-->
+    <div class="dropdown-menu dropdown-menu-right  text-right right-0">
+      <a class="dropdown-item" href="/">الرئيسية</a>
+      <a class="dropdown-item" href="/news">الأخبار</a>
+      <a class="dropdown-item" href="/library">المكتبة</a>
+      <a class="dropdown-item realase_trigger" id="realase_trigger" href="#">الإضافات</a>
+    </div>
+  </div>
+  <!--/Dropdown primary-->
+  <div class="sounds_effect_area" style="display: none !important"></div>
+  <div class="d-none d-md-block d-sm-none" id="navbarNav">
+    <ul class="navbar-nav px-2 f15">
+      <li class="nav-item nowrap">
+        <a class="nav-link in_color text-white" href="/">الرئيسية <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item nowrap">
+        <a class="nav-link in_color text-white" href="/library">المكتبة</a>
+      </li>
+      <li class="nav-item nowrap">
+        <a class="nav-link in_color text-white" href="/news">الأخبار</a>
+      </li>
+      <li class="nav-item nowrap">
+        <a class="nav-link in_color realase_trigger text-white" href="#">الإضافات</a>
+      </li>
+      <li class="nav-item nowrap">
+        <a class="nav-link in_color d-md-none d-lg-block  contact_modal_trigger text-white" href="#">تواصل معنا</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="form f15 d-none d-sm-block position-relative dropdown prevent-close">
+    <input class="search_box text-left w-100  py-2 px-3 prevent_dropdown_hide" data-toggle="dropdown" aria-haspopup="false"  aria-expanded="false" type="text" placeholder="بحث" aria-label="Search">
+        <div class="dropdown-menu position-absolute w-100 p-0 px-0" aria-labelledby="dropdownMenuButton">
+  <ul class="list-group  px-0  p-0 ltr  search-result-ul rounded mb-0"></ul>
+</div>
+  </div>
+
+<a  class="btn-floating btn-sm  waves-effect waves-light round_nav_button  d-block d-sm-none" data-toggle="collapse" href="#search_collapse" aria-expanded="false" aria-controls="collapseExample"><i class="fas fa-search" title="البحث عن سلاسل أو فرق أو أفراد"></i></a>
+  
+    <%if(uid=="none"){%><a  class="btn-floating btn-sm  waves-effect waves-light round_nav_button profile_menu_trigger"  data-toggle="modal" data-target="#login_modal" id="login_button"><i  class="fas fa-sign-in-alt" title="تسجيل الدخول أو حساب جديد"></i></a><%}else{%>
+
+    
+     <div class="profile_menu_continer">
+       
+     </div>
+     <a class="btn-floating btn-sm  waves-effect waves-light round_nav_button  profile_menu_trigger profile_button"><i  class="fas fa-user" title="حسابي"></i></a>
+
+   <%}%>
+   
+<%if(uid!="none"){%>
+<a class="btn-floating btn-sm  waves-effect waves-light round_nav_button messages_trigger <%if(data_array[1][0].count>0){%>have_social<%}%>" data-toggle="modal" data-target="#"><i class="fas fa-envelope" title="الرسائل"></i></a>  
+  <a class="btn-floating btn-sm  waves-effect waves-light round_nav_button attach_trigger" data-toggle="modal" data-target="#attach_modal"><i class="fas fa-paperclip"  title="إضافة "></i></a><%}%>
+
+
+   <%if(uid!="none"){%>
+
+    <a class="btn-floating btn-sm  waves-effect waves-light round_nav_button  <%if(data_array[0][0].count>0){%>have_social<%}%>" id="notifcation_trigger" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false"><i class="fas fa-bell"  title="الإشعارات"></i></a>
+   <%}%>
+    <span class="notifcation_continer"></span>
+    
+  <h5 class=" mb-0  mr-auto d-none d-xl-block"><span class="badge badge-primary px-2 py-2">قيد التطوير</span></h5>
+
+<!-- Collapsible element -->
+<div class="collapse mt-3 w-100 d-sm-none" id="search_collapse">
+  <div class="form f15 dropdown prevent-close">
+         
+    <input class="search_box text-left w-100  py-2 px-3  prevent_dropdown_hide" data-toggle="dropdown" aria-haspopup="false"  aria-expanded="false" type="text" placeholder="بحث" aria-label="Search">
+        <div class="dropdown-menu position-absolute w-100 p-0 px-0" aria-labelledby="dropdownMenuButton">
+  <ul class="list-group  px-0  p-0 ltr  search-result-ul rounded mb-0">
+</ul>
+</div>
+  </div>
+</div>
+<!-- / Collapsible element -->
+
+</nav>
+</header>

@@ -1,0 +1,86 @@
+
+<!-- team page -->
+
+
+<div class="mt-2" id="teams_section">
+<div class="w-responsive p-2  text-center ltr card">
+<div class="alert text-white card  text-center" style="background: rgb(63, 92, 128);" role="alert">الفرق</div>
+<div class="my-2  text-center d-block">
+	
+</div>
+
+
+<div class="table-responsive"><table id="tablePreview" class="table table-striped table-hover  table-bordered">
+            <!--Table head-->
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>إسم الفريق</th>
+                <th>البريد الإلكتروني</th>
+                <th>موقع الفريق</th>
+                <th>فيسبوك</th>
+                <th>تويتر</th>
+                <th>تاريخ الإنشاء</th>
+                <th>قائد الفريق</th>
+                <th>محظور</th>
+                <th>سبب الحظر</th>
+                <th>محظور بواسطة</th>
+                <th>الحالة</th>
+                <th>رمز shorte</th>
+                <th>فريق معلن</th>
+                <th>عدد الأعضاء</th>
+                <th>عدد الفصول</th>
+                <th>إجرائات</th>
+              </tr>
+            </thead>
+            <!--Table head-->
+            <!--Table body-->
+            <tbody>
+                <%data.forEach(function(team,index)
+                {%>
+
+                    <tr>
+                <th scope="row"><%=team.id%></th>
+                <td><%=team.team_name%></td>
+                <td><%=team.email%></td>
+                <td><%=team.website%></td>
+                <td><%=team.facebook_page%></td>
+                <td><%=team.twitter_page%></td>
+                <td><%=team.create_date%></td>
+                <td><%=team.team_leader%></td>
+                <td><%if(team.suspend==1){%>نعم<%}else{%>لا<%}%></td>
+                <td><%if(team.suspend==1){%><%=team.suspend_reason || '-'%><%}else{%>-<%}%></td>
+                <td><%if(team.suspend==1){%><%=team.suspend_by || '-'%><%}else{%>-<%}%></td>
+                <td><%=team.active%></td>
+                <td><%=team.shorte_code%></td>
+                <td><%if(team.shorte_active==1){%>نعم<%}else{%>لا<%}%></td>
+                <td><%=team.members_count%></td>
+                <td><%=team.chapters_count%></td>
+                <td>
+                    <a class="trigger info-color text-white waves-effect" href="/team/<%=team.id%>" title="عرض"><i class="fas fa-eye"></i></a>
+                    <a class="trigger info-color text-white waves-effect" href="/cpanel?type=teams&condition=one_team&index=<%=team.id%>" title="تفاصيل"><i class="fas fa-info"></i></i></a>
+                    <a class="trigger info-color text-white waves-effect" onclick="get_team_modal('<%=team.id%>')" title="تعديل"><i class="fas fa-cog"></i></a>
+                
+                
+                
+                </td>
+              </tr>
+
+
+                <%})%>
+              
+            </tbody>
+            <!--Table body-->
+          </table></div>
+
+
+<div>
+<button class="btn btn-primary d-inline btn-rounded btn-sm" onclick="get_teams_table(<%=parseInt(current_page)+1%>,<%=condition%>)" title="التالي"><i class="fas fa-angle-double-left"></i></button>
+<button class="btn btn-primary d-inline btn-rounded btn-sm" <%if(parseInt(current_page)-1>0){%>onclick="get_teams_table(<%=parseInt(current_page)-1%>,<%=condition%>)"<%}%> title="السابق"><i class="fas fa-angle-double-right"></i></button>
+</div>
+</div>
+
+</div>
+
+
+<!-- team page -->

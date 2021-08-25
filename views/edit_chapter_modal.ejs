@@ -1,0 +1,230 @@
+<!-- edit chapter_modal  -->
+<div class="modal fade" id="edit_chapter_modeal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.10.0/css/lightbox.min.css">
+  <style type="text/css">
+    li:hover .close_img {display: block !important}
+
+  </style>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header d-block">
+<div class="modal-title rtl text-right d-block f15" id="exampleModalLabel">تعديل بيانات الفصل 
+<a class="btn-floating btn-sm btn-danger" onclick="ask_to_confirm(function(){delete_chapter(<%=chapter_info.id%>)})"><i class="fas fa-times"  data-toggle="tooltip" data-placement="bottom" title="حذف الفصل"></i></a>
+</div>
+      </div>
+      <div class="modal-body">
+
+        
+<ul class="nav nav-tabs md-tabs nav-justified primary-color" role="tablist">
+  <li class="nav-item"><a class="nav-link active rtl" data-toggle="tab" href="#panel555" role="tab"><i class="fas fa-info-circle"></i> المعلومات</a></li>
+  <li class="nav-item"><a class="nav-link rtl" data-toggle="tab" href="#panel666" role="tab"><i class="fas fa-images"></i> الصور</a></li>
+</ul>
+
+<div class="tab-content pb-0">
+
+  <!-- Panel 1 -->
+  <div class="tab-pane fade in show active" id="panel555" role="tabpanel">
+
+
+<form id="edit_chapter_form">
+          <input type="hidden" name="id" value="<%=chapter_info.id%>">
+        <div class="md-form text-right rtl">
+          <div for="inputPlaceholderEx" class=" d-block rtl text-right f12">رقم الفصل</div>
+        <input placeholder="" type="text"  class="form-control" value="<%=chapter_info.chapter_number%>" name="chapter_number">
+        </div>
+        <div class="md-form text-right rtl">
+          <div for="inputPlaceholderEx" class=" d-block rtl text-right f12">عنوان الفصل</div>
+        <input placeholder="" type="text"  class="form-control" value="<%=chapter_info.chapter_label%>" name="chapter_label">
+        </div>
+        <div class="md-form text-right rtl">
+          <div for="inputPlaceholderEx" class=" d-block rtl text-right f12">رقم المجلد</div>
+        <input placeholder="" type="text"  class="form-control" value="<%=chapter_info.folder%>" name="chapter_folder">
+        </div>
+        <%if(this_user.rank=="مدير"){%>
+
+
+ <input type="hidden" name="is_plus_17" id="is_plus_17" value="false" name="is_plus_17">
+        <div class="clearfix mt-4">
+        <span class="float-left"><div class="switch f13 text-right rtl">
+  <label class="mb-0 mt-1">
+    
+    <input type="checkbox" id="is_plus_17_checkbox">
+    <span class="lever" id="is_plus_17_switch"></span>
+  </label>
+</div></span>
+        <span class="float-right f13 rtl">فصل +17</span>
+        </div>
+
+        <%}%>
+       
+      </form>
+      <div class="mt-3 text-center  py-2">
+        <button type="button" class="btn btn-secondary py-2" data-dismiss="modal">إلغاء</button>
+        <button type="button" class="btn btn-primary py-2" onclick="send_chapter_edit_data()">تعديل</button>
+      </div>
+    
+
+  </div>
+  <!-- Panel 1 -->
+
+  <!-- Panel 2 -->
+  <div class="tab-pane fade" id="panel666" role="tabpanel">
+
+<div class="alert alert-info rtl text-right f12" role="alert">
+  <i class="fas fa-info-square ml-2"></i> يمكن السحب لتغير ترتيب الصور
+</div>
+
+<ul id="sortable" class="col-md-12 d-flex flex-wrap rtl " style="list-style: none">
+  <%photos_array.forEach(function(photo,index){%>
+
+<li class="position-relative w-25 px-2 item mb-2" draggable="true" oid="<%=index%>">
+      <div class="text-white elegant-color-dark text-center rounded-circle w_600 img-thumbnail pointer waves-effect waves-light position-absolute close_img" style="width:20px;height:20px;display: none;font-size:9px;top:-5px;z-index:100;left:50%;transform: translate(-50%,0);-webkit-transform: translate(-50%,0);line-height: 1.2;">X</div>
+    <div class="view overlay img-thumbnail card">
+    <img src="<%=photo%>" class="w-100 h-100" style="object-fit: cover;" >
+    <a data-lightbox="roadtrip" href="<%=photo%>">
+    <div class="mask flex-center  rgba-black-strong pointer waves-effect  waves-light">
+      <p class="white-text f12">مشاهدة</p>
+    </div>
+    </a>
+    </div>
+</li>
+
+  <%})%>
+    
+    
+     <li class="position-relative w-25 mx-25 mb-2 px-2 adder_li" onclick="$('.photos_adder_input').click()" draggable="false">
+    <div class="view overlay img-thumbnail card">
+    <div class="text-center py-4" style="font-size:22px"><i class="fas fa-images"></i></div>
+    
+    <div class="mask flex-center  rgba-black-strong pointer waves-effect  waves-light">
+      <p class="white-text f10 px-2 text-center">إضافة مجموعة صور</p>
+    </div>
+
+    </div>
+    </li>
+
+
+</ul>
+
+<div class="text-center">
+<button type="button" class="btn btn-info mt-2 btn-rounded waves-light waves-effect" onclick="upload_photos_form()">تعديل</button>  
+</div>
+<form class="photos_form" enctype="multipart/form-data">
+<input type="hidden" id="order_input" name="order_array">
+<input type="file" name="new_files" class="photos_adder_input hide" multiple>
+<input type="hidden" name="photos_chapter_id" value="<%=chapter_info.id%>">
+</form>
+  </div>
+  <!-- Panel 2 -->
+   
+</div>
+
+
+
+        
+      </div>
+      
+    </div>
+  </div>
+  <script type="text/javascript">
+    $(document).on("change","#is_plus_17_checkbox",function(){$("#is_plus_17").val($("#is_plus_17_checkbox").is(":checked"))})
+  if(<%=chapter_info.is_plus_17%>){$("#is_plus_17_switch").click()}
+
+function send_chapter_edit_data(){$.post("/edit_chapter_form",$("#edit_chapter_form").serialize(),function(data){if(data==1){location.reload()}else{toastr.error(data);}})}
+  </script>
+}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.10.0/js/lightbox.min.js"></script>
+
+<script type="text/javascript" src="/js/Sortable.js"></script>
+<script>
+   var orginal_length=$(".item[oid]").length;
+    var el = document.getElementById('sortable');
+    var sortable = Sortable.create(el,{animation: 200,draggable: ".item"});
+
+
+    $(document).on("click",".close_img",function(){$(this).parent("li").remove()})
+
+
+
+    $(document).on("change",".photos_adder_input", function(e){
+    $(".new_li").remove()
+    for(var i=0;i<this.files.length;i++)
+    {
+
+
+      if(this.files[i].size/1024/1024 > 5){
+       toastr.error("حجم الملف يجب أن لا يتجاوز 5 ميجا")
+       this.value = "";
+       break;
+    }else{
+
+      var ext = this.files[i].name.match(/\.([^\.]+)$/)[1];
+    switch(ext)
+    {
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+        case 'gif':
+            if(i==this.files.length-1){insert_photo_to_series(this);}
+            break;
+        default:
+            toastr.error('صيغة الملف غير مقبولة')
+            this.value='';
+            break;
+    }
+
+
+    };
+
+
+
+    }
+    
+
+
+
+
+})
+function insert_photo_to_series(input)
+{ var new_length=orginal_length
+ for(var i=0;i<input.files.length;i++)
+ {  
+  
+    
+   
+   var reader = new FileReader();
+  reader.onload = function (e) {$( '<li class="position-relative w-25 px-2 mb-2 item new_li"  draggable="true"  oid="'+new_length+'"><div class="view overlay img-thumbnail card"> <img src="'+e.target.result+'" class="w-100 h-100" style="object-fit: cover;" > <a data-lightbox="roadtrip" href="'+e.target.result+'"> <div class="mask flex-center rgba-black-strong pointer waves-effect waves-light"> <p class="white-text f12">مشاهدة</p> </div> </a> </div> </li>' ).insertBefore( ".adder_li" );new_length++}
+reader.readAsDataURL(input.files[i]);
+  
+  }
+
+}
+
+function upload_photos_form()
+{
+  var order_array=new Array();
+  for(var i=0;i<$(".item[oid]").length;i++){order_array.push($(".item[oid]").eq(i).attr("oid"));}
+  $("#order_input").val(order_array.join(","));
+
+
+  var form = new FormData($(".photos_form")[0]);
+  $.ajax({
+        url: "/edit_chapter_photos",
+        method: "POST",
+        dataType: 'html',
+        data: form,
+        processData: false,
+        contentType: false,
+        success:function(data){if(data!="1"){toastr.error(data);}else{location.reload()}}
+});
+
+
+  
+  
+
+}
+
+
+</script>
+</div>
+<!-- /edit chapter_modal -->

@@ -1,0 +1,213 @@
+
+<!-- edit_series_modal -->
+<div class="modal fade" id="edit_series_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header d-block text-right rtl f13">
+        <div class="modal-title" id="exampleModalLabel">تعديل بيانات سلسلة <%=series.series_name%>
+          <%if(series.checked!=1 && this_user.rank=='مدير'){%>
+          <a class="btn-floating btn-sm btn-success waves-effect waves-light" onclick="agree(<%=series.id%>,'series');$(this).remove()" >
+          <i class="fas fa-check" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="قبول السلسلة"></i></a>
+          <%}%>
+          <%if(this_user.rank=='مدير'){%>
+         <a class="btn-floating btn-sm btn-danger" onclick="ask_to_confirm(function(){delete_series(<%=series.id%>)})"><i class="fas fa-times" data-toggle="tooltip" data-placement="bottom" title="حذف السلسلة"></i></a>
+          <%}%>
+        </div>
+      </div>
+      <form id="edit_series_form">
+      <input type="hidden" name="id" value="<%=series.id%>">
+      <div class="modal-body">
+        
+        <div class="md-form d-block w-100">
+    <div class="file-field">
+        <div class="mb-4">
+            <img src="<%=series.series_profile%>" class="rounded-circle z-depth-1-half avatar-pic rounded-circle  d-block rounded-circle img-fluid img-thumbnail mx-auto avatar-pic w_150_px h_150_px cover_img" alt="example placeholder avatar">
+        </div>
+        <div class="d-flex justify-content-center">
+            <div class="btn btn-mdb-color btn-rounded float-left waves-effect waves-light py-1">
+                <span>تعديل الصورة</span>
+                <input type="file" name="profile" id="edit_series_profile_pic">
+            </div>
+        </div>
+    </div>
+</div>
+        <div class="md-form text-right rtl">
+          <div for="inputPlaceholderEx" class=" d-block rtl text-right f12">إسم السلسلة</div>
+        <input placeholder="" type="text"  class="form-control" name="series_name" value="<%=series.series_name%>">
+        </div>
+        <div class="md-form text-right rtl">
+          <div for="inputPlaceholderEx" class=" d-block rtl text-right f12">إسم السلسلة بالعربي</div>
+        <input placeholder="" type="text"  class="form-control" name="series_arabic_name" value="<%=series.series_arabic_name%>">
+        </div>
+        <div class="md-form text-right rtl">
+          <div for="inputPlaceholderEx" class=" d-block rtl text-right f12">إسم السلسلة بالإنجليزي</div>
+        <input placeholder="" type="text"  class="form-control" name="english_name" value="<%=series.english_name%>">
+        </div>
+        <div class="md-form text-right rtl">
+          <div for="inputPlaceholderEx" class=" d-block rtl text-right f12">أسماء أخرى للسلسلة</div>
+        <input placeholder="" type="text"  class="form-control" name="series_other_names" value="<%=series.series_other_names%>">
+        </div>
+        <div class="md-form text-right rtl">
+          <div for="inputPlaceholderEx" class=" d-block rtl text-right f12">سنة الإصدار</div>
+        <input placeholder="" type="text"  class="form-control" name="series_product_date" value="<%=series.series_product_date%>">
+        </div>
+        <div class="md-form text-right rtl">
+          <div for="inputPlaceholderEx" class=" d-block rtl text-right f12">إسم المؤلف</div>
+        <input placeholder="" type="text"  class="form-control" name="series_author" value="<%=series.series_author%>">
+        </div>
+        <div class="md-form text-right rtl">
+          <div for="inputPlaceholderEx" class=" d-block rtl text-right f12">إسم الراسم</div>
+        <input placeholder="" type="text"  class="form-control" name="series_painter" value="<%=series.series_painter%>">
+        </div>
+        <%if(this_user.rank=='مدير'){%>
+
+         <div class="md-form text-right rtl">
+          <div for="inputPlaceholderEx" class=" d-block rtl text-right f12">تقييم mal</div>
+        <input placeholder="" type="text"  class="form-control" name="mal" value="<%=series.mal%>">
+        </div>
+        <div class="chips sources"></div>
+        <input type="hidden" name="sources" id="sources_hidden">
+
+
+        <%}%>
+<%if(this_user.rank=='مدير'){%> 
+
+<select class="mdb-select md-form f12 dropdown-primary" name="age">
+  <option value=""  <%if(series.age!=12 && series.age!=19){%>selected<%}%>>إختيار فئة عمرية</option>
+  <option value="12" <%if(series.age==12){%>selected<%}%>>12</option>
+  <option value="19" <%if(series.age==19){%>selected<%}%>>19</option>
+</select>
+
+<%}%>
+
+
+<%if(this_user.rank=='مدير'){%>
+<select class="mdb-select md-form f12 dropdown-primary" name="status_of_manga">
+<option value=""  <%if(series.status_of_manga!='مستمرة' && series.status_of_manga!='متوقفة' && series.status_of_manga!='منتهية'){%>selected<%}%>>حالة السلسلة</option>
+  <option value="مستمرة" <%if(series.status_of_manga=='مستمرة'){%>selected<%}%>>مستمرة</option>
+  <option value="متوقفة" <%if(series.status_of_manga=='متوقفة'){%>selected<%}%>>متوقفة</option>
+  <option value="منتهية" <%if(series.status_of_manga=='منتهية'){%>selected<%}%>>منتهية</option>
+</select>
+<%}%>
+<select class="mdb-select md-form colorful-select dropdown-primary" multiple searchable="بحث عن تصنيف" name="classifecation">
+  <option value=""  selected>التصنيفات</option>
+  <%for(var i=0;i<classes.length;i++){%>
+
+    <option value="<%=classes[i]%>" <%
+      for(var j=0;j<series.classifecation.length;j++)
+      { 
+        if(series.classifecation[j]==classes[i]){%>selected<%}
+      }%>
+      ><%=classes[i]%></option>
+
+  <%}%>
+</select>
+<div class="form-group shadow-textarea text-right rtl f12" id="user_panned_textarea">
+  <label for="exampleFormControlTextarea6" class="active">قصة السلسلة</label>
+  <textarea class="form-control z-depth-1"  rows="3" name="series_description"><%=series.series_description%></textarea>
+</div>
+<button class="btn-save btn btn-primary btn-sm">حفظ</button>
+
+      </div>
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary py-2" data-dismiss="modal">إلغاء</button>
+        <button type="button" class="btn btn-primary py-2" onclick="init_edit_series_data()">تعديل</button>
+      </div>
+    </div>
+  </div>
+
+<script type="text/javascript">
+  var sources_array=new Array();
+  $('.mdb-select').materialSelect(); 
+  $('.sources').on('chip.add', function(e, chip){sources_array.push(chip.tag);});
+
+ $('.sources').on('chip.delete', function(e, chip){sources_array.remove(chip.tag);});
+
+
+
+    function init_edit_series_data()
+   {
+    if($("#edit_series_profile_pic")[0].files.length>0){
+ if($("#edit_series_profile_pic")[0].files[0].size/1024/1024 > 5){
+       toastr.error("حجم الملف يجب أن لا يتجاوز 5 ميجا")
+       
+    }else{
+
+      var ext = $("#edit_series_profile_pic")[0].value.match(/\.([^\.]+)$/)[1];
+    switch(ext)
+    {
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+        case 'gif':
+            edit_series();
+            break;
+        default:
+            toastr.error('صيغة الملف غير مقبولة')
+            
+    }
+
+
+    };}else {edit_series()}
+    }
+
+function edit_series()
+{
+    $("#sources_hidden").val(sources_array.join(","));
+    console.log($("#sources_hidden"),sources_array);
+    var form = new FormData($("#edit_series_form")[0]);
+
+  $.ajax({
+        url: "/edit_series_form",
+        method: "POST",
+        dataType: 'html',
+        data: form,
+        processData: false,
+        contentType: false,
+        success:function(data){if(data!="1"){toastr.error(data);}else{location.reload()}}
+});
+
+
+}
+
+
+$('.sources').materialChip({
+  placeholder: '+تصنيف',
+  secondaryPlaceholder: 'أدخل تصنيف',
+  data:object_co_array('<%=series.source%>')
+});
+
+
+
+
+
+
+
+Array.prototype.remove = function() {
+    var what, a = arguments, L = a.length, ax;
+    while (L && this.length) {
+        what = a[--L];
+        while ((ax = this.indexOf(what)) !== -1) {
+            this.splice(ax, 1);
+        }
+    }
+    return this;
+};
+
+
+function object_co_array(obj_array)
+{
+  
+ obj_array=obj_array.split(",");obj_array.forEach(function(one_source,i){var ob=new Object();ob.tag=one_source;obj_array[i]=ob})
+ return obj_array
+}
+
+
+
+
+</script>
+
+
+</div>
+<!-- /edit_series_modal -->

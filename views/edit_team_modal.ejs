@@ -1,0 +1,200 @@
+
+<!-- edit_team_modal -->
+<div class="modal fade" id="edit_team_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header d-block f13 text-right rtl">
+        <h5 class="modal-title" id="exampleModalLabel">تعديل بيانات  <%=team_info.team_name%> 
+          <%if(team_info.active==0 && this_user.rank=="مدير"){%>
+<a class="btn-floating btn-sm  btn-default  waves-effect waves-light" onclick="agree(<%=team_info.id%>,'teams')">
+<i class="fas fa-check" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="قبول الفريق"></i>
+</a>
+
+          <%}%>
+          </h5>
+      </div>
+      <div class="modal-body">
+        <ul class="nav nav-tabs md-tabs nav-justified primary-color" id="myTabMD" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="profile-tab-md" data-toggle="tab" href="#main_team_setting" role="tab" aria-controls="profile-md" aria-selected="false">الإعدادات</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="contact-tab-md" data-toggle="tab" href="#team_members_setting" role="tab" aria-controls="contact-md" aria-selected="false">الأعضاء</a>
+  </li>
+</ul>
+<div class="tab-content card pt-5" id="myTabContentMD">
+  <div class="tab-pane fade show active" id="main_team_setting" role="tabpanel" aria-labelledby="profile-tab-md">
+    <form id="team_form">
+   <div class="md-form w-100">
+    <div class="file-field">
+        <div class="mb-4">
+    <img src="<%=team_info.team_profile%>" class="rounded-circle  d-block rounded-circle img-fluid img-thumbnail mx-auto avatar-pic w_150_px h_150_px cover_img" alt=" avatar">
+        </div>
+        <div class="d-flex justify-content-center">
+            <div class="btn btn-mdb-color btn-rounded float-left py-1 waves-effect waves-light">
+                <span>تغير الصورة</span>
+                <input type="file" name="profile" id="edit_team_profile_pic">
+            </div>
+        </div>
+    </div>
+</div>
+        <div class="md-form text-right rtl">
+          <div for="inputPlaceholderEx" class=" d-block rtl text-right f12">إسم الفريق</div>
+        <input placeholder="" type="text"  class="form-control" value="<%=team_info.team_name%>" name="team_name">
+        </div>
+        <div class="md-form text-right rtl">
+          <div for="inputPlaceholderEx" class=" d-block rtl text-right f12">البريد الإلكتروني</div>
+        <input placeholder="" type="text"  class="form-control" value="<%=team_info.email%>" name="email">
+        </div>
+        <div class="md-form text-right rtl">
+          <div for="inputPlaceholderEx" class=" d-block rtl text-right f12">موقع الفريق</div>
+        <input placeholder="" type="text"  class="form-control" value="<%=team_info.website%>" name="website">
+        </div>
+        <div class="md-form text-right rtl">
+          <div for="inputPlaceholderEx" class=" d-block rtl text-right f12">صفحة الفريق على فايسبوك</div>
+        <input placeholder="" type="text"  class="form-control" value="<%=team_info.facebook_page%>" name="facebook">
+        </div>
+        <div class="md-form text-right rtl">
+          <div for="inputPlaceholderEx" class=" d-block rtl text-right f12">صفحة الفريق على تويتر</div>
+        <input placeholder="" type="text"  class="form-control" value="<%=team_info.twitter_page%>" name="twitter">
+        </div>
+        
+        <div class="form-group shadow-textarea rtl text-right f12">
+  <label for="exampleFormControlTextarea6">وصف الفريق</label>
+  <textarea class="form-control z-depth-1"  rows="3" name="team_status"><%=team_info.team_status%></textarea>
+        </div>
+        <%if(this_user.rank=="مدير"){%>
+        <div class="form-group shadow-textarea rtl text-right f12 hide" id="team_panned_textarea">
+  <label for="exampleFormControlTextarea6">سبب الحظر</label>
+  <textarea class="form-control z-depth-1"  rows="3" name="suspend_reason"><%=team_info.suspend_reason%></textarea>
+        </div>
+        <!-- Material switch -->
+        <div class="clearfix mt-4">
+        <span class="float-left"><div class="switch f13 text-right rtl">
+  <label class="mb-0 mt-1">
+    
+    <input type="checkbox" id="team_panned_checkbox">
+    <span class="lever" id="team_panned_switch"></span>
+  </label>
+</div></span>
+        <span class="float-right f13">حظر الفريق</span>
+        </div>
+        
+        
+        <input type="hidden" id="team_panned_hidden_checkbox" value="false" name="is_panned">
+        <%}%>
+        <input type="hidden" name="team" value="<%=team_info.id%>">
+        </form>
+  </div>
+  <div class="tab-pane fade" id="team_members_setting" role="tabpanel" aria-labelledby="contact-tab-md">
+   <!--Table-->
+   <div class="table-responsive">
+<table id="tablePreview" class="table table-striped table-hover table-bordered text-center">
+<!--Table head-->
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>إسم العضو</th>
+      <th>صلاحيات</th>
+      <th>الصفة</th>
+      <th>إجرائات</th>
+    </tr>
+  </thead>
+  <!--Table head-->
+  <!--Table body-->
+  <tbody>
+    <%team_members.forEach(function(member,index){%>
+
+  <%if(member.member_id!=this_user.id){%>
+   <tr>
+      <th scope="row"><%=index+1%></th>
+      <td><%=member.name%></td>
+      <td>
+  <div class="switch"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="إعطاء صلاحيات لهذا العضو بتعديل كامل بيانات الفريق">
+  <label>
+  <input type="checkbox" onchange="team_member_options('permission',<%=member.id%>,this.checked)" <%if(member.permission==4){%>checked<%}%>>
+  <span class="lever"></span>
+  </label>
+  </div>
+      </td>
+      <td id="team_member_type" contenteditable="true" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="إضغط للتعديل" onfocusout="team_member_options('type',<%=member.id%>,$(this).html())"><%=member.type%></td>
+      <td><%if(member.member_status==0){%><i class="fas fa-check-circle f16 pointer mx-1 text-success" data-toggle="tooltip" data-placement="bottom" title="" onclick="team_member_options('accept',<%=member.id%>,'true');$(this).remove()" data-original-title="قبول العضو في الفريق"></i><%}%><i class="fas fa-times-circle f16 pointer mx-1 text-danger" data-toggle="tooltip" data-placement="bottom"  data-original-title="حذف العضو من الفريق" onclick="team_member_options('delete',<%=member.id%>,'true');$(this).remove()"></i></td>
+    </tr>
+
+    <%}%>
+    <%})%>
+
+    
+  </tbody>
+  <!--Table body-->
+</table>
+</div>
+<!--Table-->
+  </div>
+</div>
+        
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary py-2" data-dismiss="modal">إلغاء</button>
+        <button type="button" class="btn btn-primary py-2" onclick="if($('#team_member_type').length!=0 && $('#team_member_type').html().length>19){return}else{init_edit_team_data()}">تعديل</button>
+      </div>
+    </div>
+  </div>
+<script type="text/javascript">
+  
+  $(document).on("change","#team_panned_checkbox",function(){$("#team_panned_hidden_checkbox").val($("#team_panned_checkbox").is(":checked"));})
+  if(<%=team_info.shorte_active%>==1){$("#shorte_active_switch").click()}
+  if(<%=team_info.suspend%>==1){$("#team_panned_switch").click()}
+
+   function init_edit_team_data()
+   {
+    if($("#edit_team_profile_pic")[0].files.length>0){
+ if($("#edit_team_profile_pic")[0].files[0].size/1024/1024 > 5){
+       toastr.error("حجم الملف يجب أن لا يتجاوز 5 ميجا")
+       
+    }else{
+
+      var ext = $("#edit_team_profile_pic")[0].value.match(/\.([^\.]+)$/)[1];
+    switch(ext)
+    {
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+        case 'gif':
+            edit_team();
+            break;
+        default:
+            toastr.error('صيغة الملف غير مقبولة')
+            
+    }
+
+
+    };}else {edit_team()}
+    }
+
+function edit_team()
+{
+
+    var form = new FormData($("#team_form")[0]);
+
+  $.ajax({
+        url: "/edit_team_form",
+        method: "POST",
+        dataType: 'html',
+        data: form,
+        processData: false,
+        contentType: false,
+        success:function(data){if(data!="1"){toastr.error(data);}else{location.reload()}}
+});
+
+
+}
+
+$(document).on("keydown","#team_member_type",function(e){if(e.keyCode==13){e.preventDefault();}})
+
+
+</script>
+
+</div>
+<!-- /edit_team_modal -->

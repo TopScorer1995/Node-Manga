@@ -1,0 +1,55 @@
+<div class="dropdown">
+      
+
+      <a class="btn-floating btn-sm  waves-effect waves-light round_nav_button dropdown-toggle notifcation_menu_trigger" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false"><i class="fas fa-bell" data-toggle="tooltip" data-placement="bottom" title="الإشعارات"></i></a>
+       
+        <!--Menu-->
+    <div class="dropdown-menu dropdown-primary scrollbar p-1">
+      <div class="inside-social-result-con hidescroller">
+<div class="first-panel text-right">
+  <span id="ignore_all_noti_button">تجاهل الكل</span>
+  <span id="delete_all_noti_button">حذف الكل</span>
+  <span class="badge badge-danger mr-auto notifcation_badge"><%=count%></span>
+</div>
+<div class="second-panel" id="notifcation_con">
+  
+</div>
+<div class="thierd-panel  waves-effect prevent-close" id="get_more_notification_button"><i class="fas fa-plus-circle"></i> التالي</div>
+</div>
+    </div>
+
+    </div>
+
+
+
+    <script type="text/javascript">
+      notifcation_pointer=0;
+      $(document).on("click","#delete_all_noti_button",function(){$.post("/delete_all_notifications",response_handler)})
+      $(document).on("click","#ignore_all_noti_button",function(){$.post("/ignore_all_notifications",response_handler)})
+      $(document).on("click","#get_more_notification_button",function(){get_notifcations()})
+
+
+
+      function response_handler(data){;if(data==1){location.reload();}}
+
+      function get_notifcations(){$.post("/read_notifications",{from:notifcation_pointer},handle_notif)}
+      function handle_notif(data)
+      {
+        
+        if(data!="none")
+        {console.log(data);
+         $("#notifcation_con").html("");
+         data.forEach(function(note,index)
+          {   
+              var seen="";if(note.seen==1){seen="bg-white"};
+             var one_notifcations='<div class="one-social-result '+seen+' waves-effect" onclick="location.href=\'/read_notification/'+note.id+'\'"><li class="media rtl text-right"><img class="d-flex ml-1 border border-primary img70x70" src="'+note.img+'" alt="Generic placeholder image"><div class="media-body mt-1"><h5 class="m-0 font-weight-bold f12">'+note.name+'</h5><div class="f10">'+note.body+'</div><div class="f12"><span class="badge badge-primary">'+jQuery.timeago(note.when)+'</span></div></div></li></div>';$("#notifcation_con").append(one_notifcations);
+
+          })
+         notifcation_pointer+=3
+
+        }else {$("#get_more_notification_button").html("إنتهت النتائج");$("#get_more_notification_button").attr("id","");}
+      }
+
+      get_notifcations();
+    </script>

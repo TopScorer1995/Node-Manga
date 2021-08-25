@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+<title><%=data[0][0].chapter_number%>-<%=data[0][0].series_name%></title>
+<%- include styles %>
+<style type="text/css">
+	body {background-color: #212121 !important;overflow-x:hidden;}
+    .custom-control-label:before {right:-1.5rem !important;}
+    .custom-control-label:after {right:-1.5rem !important;}
+    .custom-control {padding-left:0px !important;padding-right: 1.5rem}
+    .photos_con img{pointer-events: none;;display: block;max-width:80%;left:50%;transform: translate(-50%,0);-webkit-transform: translate(-50%,0);position: relative;}
+    .full_browser img{max-height:100vh !important;max-width:100% !important;position: absolute !important;top:50%;left:50%;transform: translate(-50%,-50%) !important;-webkit-transform: translate(-50%,-50%) !important;}
+    
+   .dropdown-menu {max-height:70vh;overflow: auto}
+   .arrow_box:hover div {display: inline !important;}
+   .navgaitor {transition: all 0.5s !important}
+
+
+</style>
+</head>
+
+
+<body id="full_screen">
+  <div id="sound_continer" class="hide"></div>
+	<%if(data[3].length>0){%>
+<a class="btn-floating btn-lg btn-gplus position-fixed" style="right:100px;bottom:100px" type="button" role="button" onclick="get_chapter_modal(<%=data[0][0].id%>)"><i class="far fa-pencil-alt"></i></a>
+<%}%>
+
+
+
+
+<!-- nav_bar -->
+<div class="w-100 position-fixed text-center text-white  rtl  toolbar" style="z-index: 10;top:0px;left:0px;height: 100px;width:100%">
+	<div class="toolbar_wraper py-2 navgaitor" style="background-image: linear-gradient(black, transparent);height: 100px;">
+<span class="mx-2 f16 pointer" data-toggle="tooltip" data-placement="bottom" title="الرئيسية"><a href="/" class="text-white"><i class="far fa-home"></i></a></span>
+<span class="mx-2  f16 pointer" data-toggle="tooltip" data-placement="bottom" title="الإنتقال للسلسلة"><a href="/manga/<%=data[0][0].series_number%>" class="text-white"><%=data[0][0].series_name%></a></span>
+
+ <!--Dropdown primary-->
+  <div class="dropdown d-inline" id="photo_number_con">
+
+    <!--Trigger-->
+    <span class="mx-2  f16 pointer" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false"><span data-toggle="tooltip" data-placement="bottom" title="الإنتقال إلى صورة" id="image_number_span">الصورة  1/16 </span></span>
+
+    <!--Menu-->
+    <div class="dropdown-menu dropdown-primary text-center">
+      <%files_array.forEach(function(number,index){%>
+      
+      <a class="dropdown-item" onclick="index=<%=index%>;one_photo(index)"><%=index+1%>/<%=(files_array.length)%></a>
+
+      <%})%>
+      
+    </div>
+  </div>
+  <!--/Dropdown primary-->
+
+
+
+  <!--Dropdown primary-->
+  <div class="dropdown d-inline">
+
+    <!--Trigger-->
+    <span class="mx-2  f16 pointer" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false"><span data-toggle="tooltip" data-placement="bottom" title="تغير الفصل">الفصل - <%=data[0][0].chapter_number%></span></span>
+
+    <!--Menu-->
+    <div class="dropdown-menu dropdown-primary text-center">
+    	<%data[2].forEach(function(chapter,index)
+    	{%>
+         <a class="dropdown-item" href="/reader/<%=chapter.id%>"><%=chapter.chapter_number%></a>
+    	<%})%>
+      
+     
+    </div>
+  </div>
+  <!--/Dropdown primary-->
+
+
+
+<!--Dropdown primary-->
+  <div class="dropdown d-inline">
+
+    <!--Trigger-->
+    <span class="mx-2  f16 pointer" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false"><span data-toggle="tooltip" data-placement="bottom" title="تغير الفريق"><%=data[0][0].team_name%></span></span>
+
+    <!--Menu-->
+    <div class="dropdown-menu dropdown-primary text-center">
+      <%data[1].forEach(function(team,index)
+      {%>
+      	<a class="dropdown-item" href="/reader/<%=team.chapter_id%>"><%=team.team_name%></a>
+      <%})%>
+      
+    </div>
+  </div>
+  <!--/Dropdown primary-->
+
+
+
+
+
+<span class="mx-2 f16 pointer" data-toggle="tooltip" data-placement="bottom" title="ملئ الشاشة"><i class="far fa-expand-wide" onclick="toggleFullScreen(document.getElementById('full_screen'))"></i></span>
+<span class="mx-2  f16 pointer" id="res_button" data-toggle="tooltip" data-placement="bottom" title="تغير الدقة"></span>
+<span class="mx-2 f16 pointer" data-toggle="tooltip" data-placement="bottom" title="عدد مرات المشاهدة"><i class="far fa-eye"></i> <%=data[0][0].seen_number%></span>
+<a id="download_chapter_button"><span class="mx-2 f16 pointer" data-toggle="tooltip" data-placement="bottom" title="تحميل الفصل"><i class="far fa-file-archive" style="color:#39a839"></i></span></a>
+<a id="download_chapter" class="hide"></a>
+<span class="mx-2 f16 pointer" data-toggle="tooltip" data-placement="bottom" title="إعدادات العرض"><i class="far fa-cogs" data-toggle="modal" data-target="#reader_options_modal"></i></span>
+<span class="mx-2 f16 pointer" data-toggle="tooltip" data-placement="bottom" title="شرح"><i class="far fa-info" data-toggle="modal" data-target="#info_modal"></i></span>
+<span class="mx-2 f16 pointer" data-toggle="tooltip" data-placement="bottom" title="تبليغ"><i class="far fa-exclamation-triangle" style="color:#ea0a0a" onclick="get_report_modal('chapter',<%=data[0][0].id%>)"></i></span>
+
+<span data-toggle="tooltip" data-placement="bottom" title="التعليقات"><i class="far fa-comments pointer" data-toggle="modal" data-target="#comments_modal"></i></span>
+</div>
+</div>
+<!-- nav_bar -->
+
+<div class="photos_con">
+	<div class="w-100 h-100 position-absolute"></div>
+</div>
+
+
+<!-- arrows -->
+<div class="w-100 position-fixed text-white clearfix arrows_con navgaitor" style="top:50%;transform: translate(0,-50%);-webkit-transform:translate(0,-50%)">
+
+</div>
+<!-- arrows -->
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="reader_options_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content rtl text-right">
+      <div class="modal-header">
+        <h5 class="modal-title f15" id="exampleModalLabel"><i class="fas fa-cogs"></i> إعدادات التصفح</h5>
+        
+      </div>
+      <div class="modal-body">
+        <div class="mt-3 mb-2" style="color:gray">وضع القراءة</div>
+        <!-- Default unchecked -->
+<div class="custom-control custom-radio">
+  <input type="radio" class="custom-control-input" id="photos_horzi" name="photos">
+  <label class="custom-control-label" for="photos_horzi">الوضع الأفقي</label>
+</div>
+
+<!-- Default checked -->
+<div class="custom-control custom-radio">
+  <input type="radio" class="custom-control-input" id="photos_verti" name="photos" checked>
+  <label class="custom-control-label" for="photos_verti">الوضع العامودي</label>
+</div>
+
+        <div class="mt-3 mb-2" style="color:gray">وضع العرض</div>
+             <!-- Default unchecked -->
+<div class="custom-control custom-radio">
+  <input type="radio" class="custom-control-input" id="view_full" name="view">
+  <label class="custom-control-label" for="view_full">تعبئة المتصفح</label>
+</div>
+
+<!-- Default checked -->
+<div class="custom-control custom-radio">
+  <input type="radio" class="custom-control-input" id="view_normal" name="view" checked>
+  <label class="custom-control-label" for="view_normal">الوضع العادي</label>
+</div>
+
+
+      </div>
+      <div class="modal-footer ltr">
+        <button type="button" class="btn btn-primary py-2" data-dismiss="modal">تم</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="warn_plus_17" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content rtl text-right">
+      <div class="modal-body">
+      <div class="w_600 mb-2"><i class="fas fa-exclamation-triangle"></i> تحذير</div>
+      <div class="f13">هذا الفصل مصنف كفصل +17</div>
+      </div>
+      <div class="modal-footer d-inline ltr text-right">
+      	
+      	<!-- Default unchecked -->
+<div class="custom-control my-2 custom-checkbox  f13 rtl text-right">
+    <input type="checkbox" class="custom-control-input" id="is_plus_17_checkbox">
+    <label class="custom-control-label" for="is_plus_17_checkbox">عدم الإظهار مرة أخرة</label>
+</div>
+      	
+      	<button type="button" class="btn btn-secondary py-2" data-dismiss="modal">عودة</button>
+        <button type="button" class="btn btn-primary py-2" data-dismiss="modal">فهمت</button>
+        
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="info_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content rtl text-right">
+      <div class="modal-body">
+      <div class="w_600 mb-2">طريقة الإستخدام</div>
+      <div class="f13">موقع مانجاوي يختار أسلوب العرض الذي تحدده في حال الرغبة في تغير الإعدادات يمكنك القيام بهذا الإجراء من صفحة الإعدادات</div>
+      <div class="row p-3 text-center rtl">
+          <div class="col-sm-6" data-original-title="" title="">
+          	<div class="row"><div class="col-sm-12"><img  src="https://mangarock.com/svg/mouse.svg"></div></div>
+          	<div class="row py-2 f12"><div class="col-sm-12">الوضع العامودي</div></div>
+          	<div class="row"><div class="col-sm-12">(كامل الفصل)</div></div>
+          </div>
+          <div class="col-sm-6">
+          	<div class="row mt-3"><div class="col-sm-12" ><img src="https://mangarock.com/svg/keyboard.svg"></div></div>
+          	
+          	<div class="row py-2 f12"><div class="col-sm-12">الوضع الأفقي</div></div>
+          	<div class="row"><div class="col-sm-12">(عرض منزلق)</div></div>
+          </div>
+          </div>
+      </div>
+      <div class="modal-footer ltr">
+        <button type="button" class="btn btn-primary py-2" data-dismiss="modal">فهمت</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="info_modal_first_time" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content rtl text-right">
+      <div class="modal-body">
+      <div class="w_600 mb-2">طريقة الإستخدام (1/2)</div>
+      <div class="f13">موقع مانجاوي يختار أسلوب العرض الذي تحدده في حال الرغبة في تغير الإعدادات يمكنك القيام بهذا الإجراء من صفحة الإعدادات</div>
+      <div class="row p-3 text-center rtl">
+          <div class="col-sm-6" data-original-title="" title="">
+          	<div class="row"><div class="col-sm-12"><img  src="https://mangarock.com/svg/mouse.svg"></div></div>
+          	<div class="row py-2 f12"><div class="col-sm-12">الوضع العامودي</div></div>
+          	<div class="row"><div class="col-sm-12">(كامل الفصل)</div></div>
+          </div>
+          <div class="col-sm-6">
+          	<div class="row mt-3"><div class="col-sm-12" ><img src="https://mangarock.com/svg/keyboard.svg"></div></div>
+          	
+          	<div class="row py-2 f12"><div class="col-sm-12">الوضع الأفقي</div></div>
+          	<div class="row"><div class="col-sm-12">(عرض منزلق)</div></div>
+          </div>
+          </div>
+      </div>
+      <div class="modal-footer ltr">
+        <button type="button" class="btn btn-primary py-2" data-dismiss="modal" data-toggle="modal" data-target="#info_modal_first_time_2" data-backdrop="static" data-keyboard="false">فهمت</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="info_modal_first_time_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content rtl text-right">
+      <div class="modal-body">
+      <div class="w_600 mb-2">طريقة الإستخدام (2/2)</div>
+      <div class="f13">يمكنك دوما تغير الإعدادات بسرعة من زر الإعدادات السريعة <i class="fas fa-cogs"></i> في شريط القارئ</div>
+      </div>
+      <div class="modal-footer d-inline ltr text-right">
+      	
+      	<!-- Default unchecked -->
+<div class="custom-control my-2 custom-checkbox  f13 rtl text-right">
+    <input type="checkbox" class="custom-control-input" id="first_time_checkbox">
+    <label class="custom-control-label" for="first_time_checkbox">عدم الإظهار مرة أخرة</label>
+</div>
+      	
+      	<button type="button" class="btn btn-secondary py-2" data-dismiss="modal" data-toggle="modal" data-target="#info_modal_first_time">عودة</button>
+        <button type="button" class="btn btn-primary py-2" data-dismiss="modal">فهمت</button>
+        
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="comments_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+       <div class="modal-body " id="comments_modal_body">
+        ...
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+
+<%- include scripts %>
+
+</body>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+<script type="text/javascript">
+
+
+
+
+
+ 
+
+index=0;
+var photos_array=new Array();<%- JSON.stringify(files_array) %>.forEach(function(link,index){var a=new Image();a.src=link;photos_array.push(a);});
+var arrows='<div class="py-3 px-4 black d-inline pointer float-left arrow_box arrow_left" style="font-size:24px"></div><div class="py-3 px-4 black d-inline pointer float-right rtl arrow_box arrow_right" style="font-size:24px"></div>'
+var all_photos_arrow='<div class="py-3 px-4 black d-inline pointer float-left arrow_box all_arrow_left" style="font-size:24px"><i class="far fa-angle-double-left"></i></div><div class="py-3 px-4 black d-inline pointer float-right rtl arrow_box all_arrow_right" style="font-size:24px"><i class="far fa-angle-double-right"></i></div>'
+ 
+
+var swipe_sound =  new Howl({src: ['/sounds/3.mp3']});
+
+$(document).ready(function(){
+
+
+
+ 
+ 
+
+if(Cookies.get("mid_res")){$("#res_button").html("جودة كاملة");$("#res_button").attr("title","تغير الدقة لدقة كاملة")}else{$("#res_button").html("جودة متوسطة");$("#res_button").attr("title","تغير الدقة لدقة متوسطة")}
+
+$(document).on("click",".all_arrow_left",function(){location.href="/reader/<%=data[0][0].next_chapter_id%>"})
+$(document).on("click",".all_arrow_right",function(){location.href="/reader/<%=data[0][0].prev_chapter_id%>"})
+if(1==<%=data[0][0].is_plus_17%> && !Cookies.get("dont_show_plus_17")){$('#warn_plus_17').modal({backdrop: 'static', keyboard: false})}
+if(!Cookies.get("dont_show_info")){$('#info_modal_first_time').modal({backdrop: 'static', keyboard: false})}
+$("#res_button").on("click",function(){if(Cookies.get("mid_res")){Cookies.remove("mid_res")}else{Cookies.set("mid_res","true")};location.reload()})
+$("#photos_horzi").on("click",function(){Cookies.remove("vertical_view");one_photo(index);$("#photo_number_con").removeClass("hide")})
+$("#photos_verti").on("click",function(){Cookies.set("vertical_view","true");$("#view_normal").click();all_photos();$("#photo_number_con").addClass("hide")})
+$("#view_full").on("click",function(){$(".photos_con").addClass("full_browser");Cookies.remove("view_normal");$("#photos_horzi").click()})
+$("#view_normal").on("click",function(){$(".photos_con").removeClass("full_browser");;Cookies.set("view_normal","true")})
+$("#first_time_checkbox").on("change",function(){if($("#first_time_checkbox").is(":checked")){Cookies.set('dont_show_info',"true");}else{Cookies.remove('dont_show_info');}})
+$("#is_plus_17_checkbox").on("change",function(){if($("#is_plus_17_checkbox").is(":checked")){Cookies.set('dont_show_plus_17',"true");}else{Cookies.remove('dont_show_plus_17');}})
+$(document).on("click",".arrow_left",function(){index++;one_photo(index)})
+$(document).on("click",".arrow_right",function(){index--;one_photo(index)})
+$(document).on("keyup",function(e){if(e.keyCode==37){$(".arrow_left").click();$(".all_arrow_left").click()}})
+$(document).on("keyup",function(e){if(e.keyCode==39){$(".arrow_right").click();$(".all_arrow_right").click()}})
+$(document).hammer().on('swipeleft',function(){$(".arrow_left").click()})
+$(document).hammer().on('swiperight',function(){$(".arrow_right").click()})
+
+if(Cookies.get("vertical_view")){$("#photos_verti").click()}else{$("#photos_horzi").click()}
+if(Cookies.get("view_normal")){$("#view_normal").click()}else{$("#view_full").click()}
+
+var reader_socket = io('/my-namespace',{query:"chapter_number=<%=data[0][0].id%>"});
+
+comment_system("#comments_modal_body","chapter",<%=data[0][0].id%><%if(comment_id){%>,<%=comment_id%><%}%>)
+$(document).mousemove(function(){show_toolbar();delay(function(){hide_toolbar()},4000)})
+$(document).click(function(){show_toolbar();delay(function(){hide_toolbar()},4000)})
+$(document).dblclick(function(){hide_toolbar()})
+delay(function(){hide_toolbar()},4000);
+
+
+
+
+$("#download_chapter_button").on("click",function() {
+      var zip = new JSZip();
+      var a = $("#download_chapter")
+      var urls = <%- JSON.stringify(files_array) %>;
+      var i=1;
+      function request(url) {
+        return new Promise(function(resolve) {
+          var httpRequest = new XMLHttpRequest();
+          httpRequest.open("GET", url);
+          httpRequest.responseType = "arraybuffer";
+          httpRequest.onload = function() {
+            zip.file(i+".jpg", this.response);
+            i++
+            resolve()
+          }
+          httpRequest.send()
+        })
+      }
+
+      Promise.all(urls.map(function(url) {
+          return request(url)
+        }))
+        .then(function() {
+          
+          zip.generateAsync({
+              type: "blob"
+            })
+            .then(function(content) {
+              
+              location.href=URL.createObjectURL(content)
+              toastr.success("تم تحميل الملف بنجاح")
+              
+            });
+        })
+
+        toastr.info("جاري تحميل الملف سيتم إشعارك عند إكتمال التحميل")
+    })
+
+
+
+})
+
+function toggleFullScreen(elem) {;if ((document.fullScreenElement !== undefined && document.fullScreenElement === null) || (document.msFullscreenElement !== undefined && document.msFullscreenElement === null) || (document.mozFullScreen !== undefined && !document.mozFullScreen) || (document.webkitIsFullScreen !== undefined && !document.webkitIsFullScreen)) {if (elem.requestFullScreen) {elem.requestFullScreen();} else if (elem.mozRequestFullScreen) {elem.mozRequestFullScreen();} else if (elem.webkitRequestFullScreen) {elem.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);} else if (elem.msRequestFullscreen) {elem.msRequestFullscreen();}}else{if (document.cancelFullScreen) {document.cancelFullScreen();} else if (document.mozCancelFullScreen) {document.mozCancelFullScreen();} else if (document.webkitCancelFullScreen) {document.webkitCancelFullScreen();} else if (document.msExitFullscreen) {document.msExitFullscreen();}}}
+
+
+
+
+
+function one_photo(index)
+{ 
+  
+	$(".arrows_con").html(arrows);
+	if(index==photos_array.length){location.href="/reader/<%=data[0][0].next_chapter_id%>"}else 
+	if(index<0){location.href="/reader/<%=data[0][0].prev_chapter_id%>"};
+    if(index+1==photos_array.length){$(".arrow_left").html('<i class="far fa-angle-double-left"></i><div class="f13 d-inline align-middle pl-3 animated slow fadeInLeft hide">الإنتقال للفصل التالي</div>')}else{$(".arrow_left").html('<i class="far fa-angle-left"></i><div class="f13 d-inline align-middle pl-3 animated slow fadeInLeft hide">التالي</div>')};
+    if(index==0){$(".arrow_right").html('<i class="far fa-angle-double-right"></i><div class="f13 d-inline align-middle pr-3 animated slow fadeInRight hide">الإنتقال للفصل السابق</div>')}
+    	else{$(".arrow_right").html('<i class="far fa-angle-right"></i><div class="f13 d-inline align-middle pr-3 animated slow fadeInRight hide">السابق</div>')}
+    $(".photos_con").html("");
+    $(".photos_con").append(photos_array[index]);$("#image_number_span").html("الصورة "+(index+1)+"/"+(photos_array.length))
+    
+    swipe_sound.play();
+    
+}
+
+function all_photos(){$(".arrows_con").html(all_photos_arrow);$(".photos_con").html("");photos_array.forEach(function(photo,index){$(".photos_con").append(photo)})}
+
+
+
+
+
+
+function show_toolbar(){$(".navgaitor").css("opacity","1")}
+function hide_toolbar(){$(".navgaitor").css("opacity","0")}
+
+
+</script>
+
+</html>

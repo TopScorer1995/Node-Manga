@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+<title>المكتبة</title>
+<%- include styles %>
+
+<style type="text/css">
+
+.options_list {left:-250px;top:0px;z-index:100000;width:250px;box-sizing: border-box;border:1px solid rgba(0,0,0,.125);}
+.options_list .list-group-item {border:none !important;}
+.show_side_bar {left:0px !important;}
+.slide {left:250px !important;}
+.overflow_hide {overflow: hidden !important;}
+.shade {position: fixed;width: 100%;height:100%;background: rgba(0,0,0,.5);z-index:99999;}
+.correct_side {left:0px;top:0px;}
+.filter_button {right:24px;bottom:45px;}
+.card-img-top {width:100%;height:350px;object-fit: cover}
+.description {height: 40px;overflow: hidden;}
+.underline:hover {text-decoration: underline;}
+.custom-control-label::before {position: relative !important;left:0px !important;}
+.custom-control-label::after {top:4px !important;left:0px !important;}
+.select-dropdown {font-size:12px !important}
+.select-wrapper {margin: 3px 0px;}
+#authors_menu {width:100%;overflow-y: auto;overflow-x: hidden;padding:0px}
+</style>
+
+</head>
+
+
+<body class="light-blue-skin">
+<!-- options_list -->
+<ul class="list-group options_list position-fixed h-100 bg-white">
+  <form id="filter_form">
+    <input type="hidden" name="from" value="0" id="from">
+  <li class="list-group-item py-0 remove_select_all">
+    <select class="mdb-select md-form colorful-select dropdown-primary" multiple searchable="بحث عن تصنيفات" name="classes">
+  <option value=""  selected disabled>التصنيفات</option>
+  <%for(var i=0;i<classes.length;i++){%>
+
+    <option value="<%=classes[i]%>"><%=classes[i]%></option>
+
+  <%}%>
+
+</select>
+<button type="button" class="btn-save btn btn-primary btn-sm">حفظ</button>
+  </li>
+  <li class="list-group-item py-0">
+    <select class="mdb-select md-form colorful-select dropdown-primary" multiple name="status">
+  <option value="" disabled selected>حالة السلسلة</option>
+  <option value="مستمرة">مستمرة</option>
+  <option value="منتهية">منتهية</option>
+  <option value="متوقفة">متوقفة</option>
+</select>
+<button type="button" class="btn-save btn btn-primary btn-sm">حفظ</button>
+  </li>
+  <li class="list-group-item py-0">
+    <!-- Material input -->
+<div class="md-form">
+  <!-- Basic dropdown -->
+<input data-toggle="dropdown"
+  aria-haspopup="true" aria-expanded="false" placeholder="إسم المؤلف" type="text" id="author_input" class="form-control" style="font-size:12px" name="authors">
+
+<div class="dropdown-menu" id="authors_menu">
+  
+</div>
+<!-- Basic dropdown -->
+  
+  
+</div>
+  </li>
+  <li class="list-group-item py-0">
+   <label for="" class="label_font">تصفية سنة الإصدار</label>
+   <div class="range-field">
+  <input type="range" min="<%=counts[1][0].min_year%>" value="-1" max="<%=counts[1][0].max_year%>" name="product_year" />
+</div>
+  </li>
+  <li class="list-group-item py-0">
+    <label for="" class="label_font">تصفية  عدد الفصول</label>
+   <div class="range-field">
+  <input type="range" min="<%=counts[2][0].min_chapters%>" max="<%=counts[2][0].max_chapters%>" value="-1" name="chapters" />
+</div>
+  </li>
+   <li class="list-group-item py-0">
+    <label for="" class="label_font">تصفية  عدد المجلدات</label>
+   <div class="range-field">
+  <input type="range" min="<%=counts[3][0].min_folder%>" value="-1" max="<%=counts[3][0].max_folder%>" name="folders" />
+</div>
+  </li>
+  <li class="list-group-item">
+    <!-- Default unchecked -->
+<div class="custom-control custom-radio rtl text-right f12 px-0">
+  <input type="radio" class="custom-control-input" id="most_rank_checkbox" value="most_watch" name="radio_filter">
+   <label class="m-0 float-right" id="ranking_trigger" for="most_rank_checkbox">الأكثر مشاهدة</label>
+  <label class="custom-control-label float-left" for="most_rank_checkbox"></label>
+</div>
+
+<hr class="my-2">
+<!-- Default unchecked -->
+    <!-- Default unchecked -->
+<div class="custom-control custom-radio rtl text-right f12 px-0">
+  <input type="radio" class="custom-control-input" id="most_recent"  value="most_recent" name="radio_filter">
+   <label class="m-0 float-right" id="recent_trigger" for="most_recent">الأحدث</label>
+  <label class="custom-control-label float-left" for="most_recent"></label>
+</div>
+<hr class="my-2">
+    <!-- Default unchecked -->
+<div class="custom-control custom-radio rtl text-right f12 px-0">
+  <input type="radio" class="custom-control-input" id="trending" value="most_trending" name="radio_filter">
+   <label class="m-0 float-right" id="trending_trigger" for="trending">الشائع</label>
+  <label class="custom-control-label float-left" for="trending"></label>
+</div>
+<hr class="my-2">
+    <!-- Default unchecked -->
+<div class="custom-control custom-radio rtl text-right f12 px-0">
+  <input type="radio" class="custom-control-input" id="recommanded" value="recommanded" name="radio_filter">
+   <label class="m-0 float-right" id="recommanded" for="recommanded">ينصح بها</label>
+  <label class="custom-control-label float-left" for="recommanded"></label>
+</div>
+  </li>
+  <li class="list-group-item">
+    <button type="button" class="btn btn-primary btn-rounded py-2 d-block w-100 m-auto" onclick="send_filter_form('true')">تفعيل</button>
+  </li>
+
+</form>
+</ul>
+<!-- / options_list -->
+<%- include header %>
+<main class="content container-fluid mt-10 position-relative" >
+<div  class="row">
+
+
+
+
+<!-- body -->
+<div class="col-xl-12 body">
+<div  class="btn-floating btn-lg red waves-effect waves-light filter_button position-fixed" onclick="scroll_trigger=true;side_menu_show()"><i class="far fa-bars"></i></div>
+<div class="series_continer"></div>
+</div>
+
+
+
+</div>
+<!-- /body -->
+
+
+
+
+</main>
+<%- include footer %>
+<%- include scripts %>
+<script type="text/javascript">
+
+var scroll_trigger=true;
+
+
+$("#author_input").on("keyup",document,function()
+{
+  $.post("/get_authors",{word:$("#author_input").val()},function(data)
+  {   $("#authors_menu").html('')
+      data.forEach(function(item,index)
+      { 
+        $("#authors_menu").append('<a class="dropdown-item author_value" href="#">'+item.series_author+'</a>')
+      })
+  })
+})
+
+$(document).on("click",".author_value",function(){;var val=$(this).html();$("#author_input").val(val);})
+
+
+ function side_menu_show(){$(".options_list").addClass("show_side_bar animated bounceInLeft");$("header,footer,main").addClass("slide");$("body").addClass("overflow_hide");$(".shade").addClass("animated fadeIn correct_side")} 
+
+ function side_menu_hide(){$(".shade").removeClass("animated fadeIn correct_side");$(".options_list").removeClass("show_side_bar animated bounceInLeft");$("header,footer,main").removeClass("slide");$("body").removeClass("overflow_hide");}
+
+
+<%if(class_query!=""){%>reload_class('<%=class_query%>')<%}else{%>send_filter_form()<%}%>
+<%if(recent){%>$("#recent_trigger").click();send_filter_form()<%}else{%><%}%>
+<%if(trending){%>$("#trending_trigger").click();send_filter_form()<%}else{%><%}%>
+<%if(most_watch){%>$("#ranking_trigger").click();send_filter_form()<%}else{%><%}%>
+<%if(recommanded){%>$("#recommanded").click();send_filter_form()<%}%>
+ function send_filter_form(bool){side_menu_hide();if(bool){$(".series_continer").html("");$("#from").val(0)}$.post("/manga_filter_form",$("#filter_form").serialize(),handle)}
+
+$(window).scroll(function(e){var scrollTop = $(window).scrollTop();var docHeight = $(document).height();var winHeight = $(window).height();var scrollPercent = (scrollTop) / (docHeight - winHeight);var scrollPercentRounded = Math.round(scrollPercent*100);if(scrollPercentRounded>95){if(scroll_trigger){send_filter_form();}} });
+    
+
+ function handle(data){
+  delay(function(){
+  if(data==0){$(".series_continer").append('<div class="alert alert-info text-center rtl d-block w-100 mt-2" role="alert">إنتهت نتائج البحث</div>');scroll_trigger=false;return}
+ $("#from").val(parseInt($("#from").val())+36);
+  data.forEach(function(series,index)
+  {  
+    if(index%6==0){$(".series_continer").append('<div class="row  one_manga_row"></div>')}
+    var classes="";
+    series.classifecation.split(",").forEach(function(clss,i)
+  {
+    classes+='<span class="badge badge-primary mx-1 pointer" onclick="reload_class(\''+clss+'\')">'+clss+'</span>'
+    if(i==series.classifecation.split(",").length-1)
+    {
+      $(".one_manga_row").last().append('<div class="col-md-2 mb-2"><!-- Card --><div class="card booking-card animated flipInY" style="min-height:100%"><div class="view overlay zoom"><img class="h-100 card-img-top img-fluid" src="'+series.series_profile+'" alt="Card image cap"><a href="/manga/'+series.id+'"><div class="mask flex-center rgba-black-strong"><div class="white-text w-100 px-1 text-center f12 rtl">'+(series.series_description || 'لا يوجد قصة')+'</div></div></a></div><div class="card-body"><h4 class="my-0 card-title font-weight-bold points_overflow underline pointer" onclick="location.href=\'/manga/'+series.id+'\'">'+series.series_name+'</h4><hr class="my-2"><div class="text-center rtl text-warning">'+series.stars+'</div><hr class="my-2"><div class="d-block w-100 mb-0 text-center">'+classes+'</div></div></div></div>')
+
+    }
+  })
+    
+  })},500)
+
+
+}
+
+
+
+function reload_class(cls)
+{ scroll_trigger=true;
+  $("[name='classes']").val(cls);
+  send_filter_form('true');
+}
+waitForEl(".select-toggle-all",function(){$(".select-toggle-all").remove()})
+
+</script>
+<div class="shade" onclick="side_menu_hide()"></div>
+</body>
+
+</html>

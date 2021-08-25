@@ -1,0 +1,68 @@
+
+<!-- reports page -->
+
+<div class="mt-2" id="report_section">
+<div class="w-responsive p-2  text-center ltr card">
+<div class="alert text-white card  text-center" style="background: rgb(63, 92, 128);" role="alert">البلاغات</div>
+<div class="my-2  text-center d-block">
+	
+</div>
+
+
+<div class="table-responsive"><table id="tablePreview" class="table table-striped table-hover  table-bordered">
+            <!--Table head-->
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>النوع</th>
+                <th>التبليغ على</th>
+                <th>تفاصيل</th>
+                <th>بواسطة</th>
+                <th>تمت المعالجة</th>
+                <th>تمت المعالجة بواسطة</th>
+                <th>إجرائات</th>
+                
+              </tr>
+            </thead>
+            <!--Table head-->
+            <!--Table body-->
+            <tbody>
+              <%data.forEach(function(report,index){%>
+
+               <tr>
+                <th scope="row"><%=report.id%></th>
+                <td><% if(report.type=="chapter"){%>فصل<%}else{%>فريق<%}%></td>
+                <td class="rtl"><a><%=report.report_on_names%></a></td>
+                <td class="rtl"><%=report.body%></td>
+                <td><%=report.by_user%></td>
+                <td><% if(report.proccessed==1){%>نعم<%}else{%>لا<%}%></td>
+                <td><%=report.proccessed_by_user || '-'%></td>
+                <td>
+                  <%if(report.proccessed==0){%>
+                  <a class="trigger info-color text-white waves-effect" onclick="proccessed_report(<%=report.id%>)" title="تمت المعالجة"><i class="fas fa-check"></i></a>
+                  <%}%>
+                  <a class="trigger info-color text-white waves-effect" onclick="<%if(report.type=="chapter"){%>get_chapter_modal(<%=report.report_on_id%>)<%}else if(report.type=="team"){%>get_team_modal(<%=report.report_on_id%>)<%}%>" title="معالجة"><i class="fas fa-cog"></i></a>
+                </td>
+              </tr>
+
+              <%})%>
+             
+
+            </tbody>
+            <!--Table body-->
+          </table></div>
+
+<div>
+<button class="btn btn-primary d-inline btn-rounded btn-sm" onclick="get_reports_table(<%=parseInt(current_page)+1%>,<%=condition%>)" title="التالي"><i class="fas fa-angle-double-left"></i></button>
+<button class="btn btn-primary d-inline btn-rounded btn-sm" <%if(parseInt(current_page)-1>0){%>onclick="get_reports_table(<%=parseInt(current_page)-1%>,<%=condition%>)"<%}%> title="السابق"><i class="fas fa-angle-double-right"></i></button>
+</div>
+
+
+	
+</div>
+<script type="text/javascript">
+  function proccessed_report(id){$.post("/proccessed_report",{id:id},function(data){if(data==1){location.reload()}})}
+</script>
+</div>
+
+<!-- reports page -->

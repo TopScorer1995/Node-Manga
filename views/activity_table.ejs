@@ -1,0 +1,51 @@
+
+<!-- activity page -->
+
+<div class="mt-2" id="activity_section">
+<div class="w-responsive p-2  text-center ltr card">
+<div class="alert text-white card  text-center" style="background: rgb(63, 92, 128);" role="alert">النشاطات</div>
+<div class="my-2  text-center d-block">
+	
+</div>
+
+
+<div class="table-responsive"><table id="tablePreview" class="table table-striped table-hover  table-bordered">
+            <!--Table head-->
+            <thead>
+             
+               
+
+                  <tr>
+                   <th>#</th>
+                   <th>النشاط</th>
+                  </tr>
+                
+               
+              
+            </thead>
+            <!--Table head-->
+            <!--Table body-->
+            <tbody>
+               <%data.forEach(function(activity,index){%>
+              <tr>
+                <th scope="row"><%=index+1%></th>
+                <td class="rtl"><%=activity%></td>
+              </tr>
+                <%})%>
+            </tbody>
+            <!--Table body-->
+          </table></div>
+
+
+<div>
+<button class="btn btn-primary d-inline btn-rounded btn-sm" onclick="get_activity_table(<%=parseInt(current_page)+1%>,<%=condition%>)" title="التالي"><i class="fas fa-angle-double-left"></i></button>
+<button class="btn btn-primary d-inline btn-rounded btn-sm" <%if(parseInt(current_page)-1>0){%>onclick="get_activity_table(<%=parseInt(current_page)-1%>,<%=condition%>)"<%}%> title="السابق"><i class="fas fa-angle-double-right"></i></button>
+</div>
+
+
+	
+</div>
+
+</div>
+
+<!-- activity page -->

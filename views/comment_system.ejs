@@ -1,0 +1,191 @@
+<div class="col-12 card p-2 comments_system">
+	<script type="text/javascript" src="/js/convert_to_text.js"></script>
+	<form class="comment_form"  id="comment_form">
+	<input type="hidden" name="index" value="0">
+	<input type="hidden" name="type" value="<%=type%>">
+	<input type="hidden" name="oid" value="<%=on%>">
+	<input type="hidden" name="comment_value">
+    </form>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/tributejs/3.5.1/tribute.min.css">
+	<style type="text/css">
+	.hidden_el {display: none}
+		.tribute-container {background-color: white !important;margin:0px;box-shadow: 0px 0px 0px 1px #ddd}
+		.tribute-container ul {padding:0px !important;margin:0px;background-color: white}
+		.tribute-container ul li {padding:3px;margin:0px;background-color: white}
+		.tribute-container .one_search_result {border:none;background-color: rgba(0,0,0,0) !important}
+		.comment .emojioneemoji {width:20px;}
+
+.dot {
+		display:inline-block;
+		width:10px;
+		height:10px;
+		border-radius:50%;
+		margin-right:3px;
+		background:#303131;
+		animation: wave 1.3s linear infinite;
+		}
+
+	.dot:nth-child(2) {
+			animation-delay: -1.1s;
+		}
+
+		.dot:nth-child(3) {
+			animation-delay: -0.9s;
+		}
+		@keyframes wave {
+	0%, 60%, 100% {
+		transform: initial;
+	}
+
+	30% {
+		transform: translateY(-15px);
+	}
+}		
+	</style>
+
+<div class="mt-2 comment_typing_animation hidden_el text-center">
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+</div>
+	<div class="sounds_continer hidden_el"></div>
+	<div class="clearfix  px-3 pt-2">
+	<span class="rtl text-right float-right  d-inline"><i class="fas fa-comments-alt"></i> التعليقات</span>
+	<span class="badge badge-danger float-left d-inline rounded px-2 py-1"><%=data[0][0].comments_count%></span>
+    </div>
+	<hr>
+	<div id="comments" class="px-2">
+
+
+
+  <!-- Grid row -->
+  <div class="row">
+
+    <!-- Grid column -->
+    <div class="col-lg-12">
+     <div class="f12 pointer hover_underline more_comment_trigger text-center" style="color:#466790" onclick="load_more()">المزيد من التعليقات</div>
+      <!-- Newsfeed -->
+      <div class="mdb-feed rtl text-right comments_render_area">
+
+       
+
+        
+
+      </div>
+      <!-- Newsfeed -->
+      <%if(myid){%>
+      <div class="text-right rtl"><i class="far fa-plus"></i> إضافة تعليق</div>
+      <%}%>
+    
+    <hr>
+    <%if(myid){%>
+    <div class="form-group basic-textarea rounded-corners text-right rtl" id="comment_textarea">
+    <textarea class="form-control z-depth-1 px-2 comment_textarea" type="<%=type%>" oid="<%=on%>" rows="3" id="comment_textarea" placeholder="أضف تعليقك ..."></textarea>
+    </div>
+    <%}%>
+    </div>
+    <!-- Grid column -->
+
+  </div>
+  <!-- Grid row -->
+
+
+	</div>
+    
+	<script type="text/javascript">
+
+$(".comment_textarea").emojioneArea({ tones: false,recentEmojis: false,filtersPosition: "bottom",search: false,buttonTitle: "إستخدم زر tab لإضافة التعابير بشكل أسرع",attributes:{dir:"rtl",spellcheck:false,autocomplete:false,autocorrect:false,autocapitalize:false}});
+$(document).on("keydown",".comment_textarea",function(e){if(e.keyCode==13){e.preventDefault();}})
+
+$(document).on("keyup",".comment_textarea",function(e){if(e.keyCode!=13){delay(function(){socket.emit('comment_typing', {type:"<%=type%>",on:<%=on%>})},200)}})
+
+var tribute = new Tribute({ selectTemplate: function (item) {return '<a contenteditable="false" class="badge badge-info tag" tag_to="'+JSON.parse(item.string).id+'">'+JSON.parse(item.string).username+'@'+'</a>';},menuItemTemplate: function (item) {return '<div class="chip chip-md  white-text waves-effect waves-effect w-100 m-0 rounded-0 one_search_result transparent"><img class="rounded-circle" src="'+JSON.parse(item.string).profile_photo+'" alt=""><div class="d-inline-block float-left h-100 search_box_body_width">'+JSON.parse(item.string).username+'</div><div class="d-inline float-right"></div></div>';},lookup: function (user, mentionText) {
+   
+    return JSON.stringify(user)
+  },
+  values: function (text, cb) {
+    $.post("/search_users",{query:text},function(data){cb(data)})
+  }
+})
+
+
+waitForEl(".emojionearea-editor",function(){tribute.attach(document.getElementsByClassName("emojionearea-editor"))})
+
+
+socket.on("new_comment",function(data){comment_sound.play();if(data.type=='<%=type%>' && data.comment_on==<%=on%>){set_comment(data)}})
+socket.on("comment_typing",function(data){if(data.type=="<%=type%>" && data.on=="<%=on%>"){comment_typing_animation()}})
+
+
+function get_comments(type,oid,from,render_comment_id){var comment_id;if(typeof render_comment_id=="number"){comment_id=render_comment_id};$(".comments_render_area").html("");$.post("/render_comments",{type:type,oid:oid,from:from,comment_id},function(data)
+{   if(data.length<10){$(".more_comment_trigger").hide()}
+      if(typeof render_comment_id=="number"){render_tag(render_comment_id);}
+	  data.forEach(function(comment,index)
+	  {
+	  	  set_comment(comment)
+	  })
+})}
+
+get_comments('<%=type%>',<%=on%>,0<%if(comment_id){%>,<%=comment_id%><%}%>)
+$(document).ready(function(){
+$(document).on("keydown",".comment_textarea",function(e)
+{ 
+	if(e.keyCode==13 && Convert_to_text($(this).find(".emojionearea-editor").html().trim())!="")
+		{
+    var comment_system=$(this);
+	comment_system.parents(".comments_system").find(".comment_form").find("[name=comment_value]").val(comment_system.find(".emojionearea-editor").html())
+    var comment_type=comment_system.parents(".comments_system").find("#comment_form").find("[name=type]").val()
+    var comment_on=comment_system.parents(".comments_system").find("#comment_form").find("[name=oid]").val()
+    var comment_value=Convert_to_text(comment_system.parents(".comments_system").find("#comment_form").find("[name=comment_value]").val())
+
+
+$.post("/submit_comment",{type:comment_type,oid:comment_on,body:comment_value},function(data){if(data.constructor === Array){$(".emojionearea-editor").html("")}})
+   
+
+ }   
+})
+})
+
+
+function set_comment(data)
+{   
+	var close="";if(data.is_owner==1){close='<span class="mx-2"><i class="fas  fa-times-circle pointer f12 text-danger" data-toggle="tooltip" data-placement="top" title="حذف التعليق" onclick="var trigger=$(this);ask_to_confirm(function(){remove_comment('+data.id+',trigger.parents(\'.comment\'))})"></i></span>'}
+	var liked="";if(data.liked==1){liked="text-info"}
+	var disliked="";if(data.disliked==1){disliked="text-info"}
+	$(".comments_render_area").append('<div class="news comment py-1"><div class="label ml-2" style="width:70px!important"><img src="'+data.profile_photo+'" class="rounded-circle z-depth-1-half img-thumbnail" style="width:70px!important;height:70px!important"></div><div class="excerpt mw-100" style="overflow:hidden"><div class="brief pb-0 f13"><a class="name" href="/profile/'+data.by_member+'">'+data.username+'</a> <div class="date time_ago_dom" when="'+data.add_date+'"></div></div><div class="added-text  mw-100 f13 mb-1">'+data.body+'</div><div class="feed-footer rtl f11"><a class="comment rtl" data-toggle="collapse" href="#collapseExample-4" aria-expanded="false" aria-controls="collapseExample-4"></a><mark class="like_area bg-white"><span><a class="likes_count">'+data.likes_reactions+'</a></span><a class="thumbs mx-1" data-toggle="tooltip" data-placement="top" title="أعجبني"><i class="fas fa-thumbs-up '+liked+'" onclick="var trigger=$(this);like_comment('+data.id+',trigger);<%if(myid){%>like_effect(trigger,true);<%}%>"></i></a><span><a class="dislikes_count">'+data.dislikes_reactions+'</a></span><a class="thumbs mx-1" data-toggle="tooltip" data-placement="top" title="لم يعجبني"><i class="fas fa-thumbs-down '+disliked+'" onclick="var trigger=$(this);dislike_comment('+data.id+',trigger);<%if(myid){%>dislike_effect(trigger,true)<%}%>"></i></a></mark><span class="mx-2"><a>-</a></span><%if(myid){%><a  class="thumbs mx-1" data-toggle="tooltip" data-placement="top" title="رد"><i class="fas fa-user-tag" onclick="tag_to('+data.by_member+',\''+data.username+'\')"></i></a><%}%>'+close+'<div class="collapse" id="collapseExample-4"><div class="card card-body mt-1"><div class="md-form mt-1 mb-1"><textarea type="text" id="form7" class="form-control md-textarea" rows="3"></textarea><label for="form7">Add comment</label></div><div class="d-flex justify-content-end"><button type="button" class="btn btn-flat waves-effect" data-toggle="collapse" data-target="#collapseExample-4" aria-expanded="false" aria-controls="collapseExample-4">Cancel</button><button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#collapseExample-4" aria-expanded="false" aria-controls="collapseExample-4">Reply</button></div></div></div></div></div></div>');
+	set_when()
+}
+
+var delay_hiding_typing_animation = (function(){var timer = 0;return function(callback, ms){clearTimeout (timer);timer = setTimeout(callback, ms)}})()
+
+function remove_comment(id,comment){$.post("/delete_comment",{oid:id},function(data){if(data==1){comment.remove()}})}
+function like_comment(id,tigger){$.post("/like_comment",{oid:id},function(data){})}
+function dislike_comment(id,tigger){$.post("/dislike_comment",{oid:id},function(data){})}
+function like_effect(trigger,loop){;like_sound.play();;trigger.addClass('animated rubberBand');;if(trigger.hasClass("text-info")){trigger.removeClass("text-info");trigger.parents('.like_area').find(".likes_count").html(parseInt(trigger.parents('.like_area').find(".likes_count").html())-1)}else{trigger.addClass("text-info");trigger.parents('.like_area').find(".likes_count").html(parseInt(trigger.parents('.like_area').find(".likes_count").html())+1)};setTimeout(function(){trigger.removeClass('animated rubberBand');},1000);if(loop){dislike_effect(trigger.parents(".like_area").find('.fa-thumbs-down.text-info'),false)}}
+function dislike_effect(trigger,loop){trigger.addClass('animated rubberBand');;if(trigger.hasClass("text-info")){trigger.removeClass("text-info");trigger.parents('.like_area').find(".dislikes_count").html(parseInt(trigger.parents('.like_area').find(".dislikes_count").html())-1)}else{trigger.addClass("text-info");trigger.parents('.like_area').find(".dislikes_count").html(parseInt(trigger.parents('.like_area').find(".dislikes_count").html())+1)};setTimeout(function(){trigger.removeClass('animated rubberBand');},1000);if(loop){like_effect(trigger.parents(".like_area").find('.fa-thumbs-up.text-info'),false)}}
+
+function tag_to(id,username){$(".emojionearea-editor").html('');$(".emojionearea-editor").append('<a contenteditable="false" class="badge badge-info tag" tag_to="'+id+'">'+username+'@'+'</a> &nbsp;');location.href="#comment_textarea"}
+function load_more(){$("[name=index]").val(parseInt($("[name=index]").val())+1);get_comments('<%=type%>',<%=on%>,$("[name=index]").val())}
+function comment_typing_animation(){$(".comment_typing_animation").removeClass("hidden_el");$(".comment_typing_animation").addClass("animated fadeInUp");comment_typing_remove_animation()}
+function comment_typing_remove_animation(){delay_hiding_typing_animation(function(){animateCss(".comment_typing_animation","fadeOutDown",function(){$(".comment_typing_animation").addClass("hidden_el")})},2000)}
+	
+
+function render_tag(id)
+{
+	if("<%=type%>"=="series"){waitForEl("#"+id,function(){$("#comments_tab_trigger").click();})}else
+	if("<%=type%>"=="new"){waitForEl("#"+id,function(){location.href="#"+id})}else
+	if("<%=type%>"=="chapter"){$("#comments_modal").modal("show");location.href="#"+id}
+    $("*").on("shown.bs.tab",function(){location.href="#"+id;});
+}
+
+
+
+
+
+
+
+	var like_sound =  new Howl({src: ['/sounds/4.mp3']});
+	var comment_sound =new Howl({src: ['/sounds/2.mp3']});
+
+	</script>
+
+</div>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+<title>mymanga - <%=data[0][0].label%></title>
+<%- include styles %>
+<style type="text/css">
+	.chip.chip-lg {
+  height: 52px;
+  line-height: 52px;
+  border-radius: 26px;
+}
+.chip.chip-lg img {
+  height: 52px;
+  width: 52px;
+}
+</style>
+</head>
+
+
+<body class="light-blue-skin">
+<%- include header %>
+<main class="content container-fluid mt-6">
+
+
+
+
+
+<!-- body -->
+<div class="w-responsive mx-auto body text-center">
+<div class="card p-1">
+
+
+<div class="w-100 position-relative">
+
+<img src="<%=data[0][0].wallpaper%>" alt="thumbnail" class="w-100 img-thumbnail" style="height:450px !important;object-fit: cover">		
+</div>
+<div class="text-center rtl py-2  w_600  alert mt-2" style="font-size:20px"><%=data[0][0].label%></div>
+<div class="w-100 p-2 text-right" style="text-align: initial;">
+	<%-data[0][0].body%>
+</div>
+<li class="list-group-item d-flex justify-content-between align-items-center text-right rtl  rgba-cyan-slight py-1">
+<span>
+<%if(data[1].length>0){%>
+<i style="font-size:20px" class="align-middle fas fa-times-circle pointer text-danger"  data-toggle="tooltip" data-placement="top" title="" data-original-title="حذف الخبر" onclick="ask_to_confirm(function(){remove_news(<%=data[0][0].id%>)})"></i>
+<%}%>
+<img class="img-thumbnail rounded-circle" src="<%=data[0][0].profile_photo%>" style="width:70px;height:70px"> 
+<span class="px-2 w_600" onclick="location.href='/profile/<%=data[0][0].by_member%>'"><span class="hover_underline pointer"><%=data[0][0].username%></span></span>
+</span>
+<span class="w_600 px-3" id="add_date"></span>
+</li>
+
+
+</div>
+<div id="comments" class="my-2">
+	
+</div>
+
+
+
+
+
+
+</div>
+<!-- /body -->
+
+
+
+
+</main>
+<%- include footer %>
+<%- include scripts %>
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+		$("#add_date").html('<span class="badge badge-primary p-2">'+jQuery.timeago(new Date('<%=data[0][0].add_date%>'))+'</span>')
+	})
+	function remove_news(id){$.post("/remove_news",{id:id},function(data){if(data==1){location.reload()}})}
+	comment_system("#comments",'new',<%=data[0][0].id%><%if(comment_id){%>,<%=comment_id%><%}%>)
+</script>
+</body>
+
+</html>

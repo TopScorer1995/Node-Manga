@@ -1,0 +1,85 @@
+
+<div class="modal left  fade" id="chat_box" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-full-height modal-left modal-info modal-notify" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-white">
+        <div class="modal-title d-block text-right w-100 f13 rtl" id="exampleModalLabel"><i class="fas fa-comments px-2"></i> <span class="w_600"><%=data[0][0].username%></span>  <i class="fas fa-sync-alt px-3 pointer" onclick="get_chat_box_message()" title="رسائل أقدم"></i> <i class="far fa-arrow-left pointer" data-dismiss="modal" onclick="get_messages_modal();" title="عودة"></i></div>
+      </div>
+      <div class="modal-body scroll_bottom" id="area_to_append_messages" style="background: #f9f1f1;overflow-y: auto;max-height: calc(100vh - 198px);overflow-x: hidden;">
+       
+       
+      </div>
+      <div class="modal-footer" id="new_message_modal_footer">
+        <textarea class="w-100 h-100 rtl f13 text-right px-2" placeholder="رسالة جديدة" id="new_messsage_area"></textarea>
+      </div>
+      <div id="chat_sound_box" class="hide"></div>
+    </div>
+  </div>
+  <script type="text/javascript">
+
+var message_sound =  new Howl({src: ['/sounds/2.mp3']});
+
+
+
+var chat_box_index=0;
+var to=<%=data[0][0].id%>;
+
+
+
+  $("#new_messsage_area").emojioneArea({ tones: false,recentEmojis: false,filtersPosition: "bottom",search: false,buttonTitle: "إستخدم زر tab لإضافة التعابير بشكل أسرع"});
+    $(document).on("keydown","#new_message_modal_footer  .emojionearea-editor",function(e){if(e.keyCode==13){e.preventDefault();take_message()}})
+
+  function take_message()
+  {   
+    var message=$("#new_message_modal_footer  .emojionearea-editor").html().trim();
+    if(message==""){return}
+    else
+    {
+    $("#new_message_modal_footer  .emojionearea-editor").html("")
+    add_message(message,new Date(),'انت')
+    send_message(message.trim(),<%=data[0][0].id%>)
+    
+    }
+
+  }
+
+function get_chat_box_message(){$.post("/get_chat_box_message",{index:chat_box_index,to:to},function(data){append_messages_array(data[0]);chat_box_index=chat_box_index+20})}
+
+function append_messages_array(array)
+{ 
+  array.forEach(function(message,index)
+  {
+    $("#area_to_append_messages").prepend('<div class="chat-body  text-right rtl white p-3  z-depth-1 mb-2"><div class="header"><strong class="primary-font"> '+message.m_from+' </strong><small class="pull-right text-muted"><i class="far fa-clock"></i> <span class="time_ago_dom" when="'+message.add_date+'"></span></small></div><hr class="w-100"><p class="mb-0 f13">'+message.body+'</p></div>');
+    
+    setTimeout(function(){$("#area_to_append_messages").scrollTop($("#area_to_append_messages")[0].scrollHeight);}, 300);
+    
+
+  })
+  set_when();
+  
+}
+
+
+
+  function add_message(message,when,from)
+  {  
+    
+    $("#area_to_append_messages").append('<div class="chat-body animated rubberBand text-right rtl white p-3  z-depth-1 mb-2"><div class="header"><strong class="primary-font"> '+from+' </strong><small class="pull-right text-muted"><i class="far fa-clock"></i> <span class="time_ago_dom" when="'+when+'">الأن</span></small></div><hr class="w-100"><p class="mb-0 f13">'+message+'</p></div>')
+    $("#area_to_append_messages").scrollTop($("#area_to_append_messages")[0].scrollHeight);
+
+
+  }
+
+  function send_message(message,to)
+  {
+    $.post("/send_message",{message:message,to:to})
+  }
+
+
+   socket.on('message', function(msg){if(msg.from_id==to){message_sound.play();add_message(msg.message,new Date(),msg.from)}});
+
+
+get_chat_box_message()
+ 
+ </script>
+</div>

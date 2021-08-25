@@ -1,0 +1,92 @@
+<!-- contact_Modal -->
+<div class="modal fade" id="modal_contact_form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      
+      <div class="modal-body">
+        <div class="card">
+  <div class="alert alert-light m-2 text-right rtl f12" role="alert"><i class="far fa-exclamation"></i> سيتم إشعارك عند وصول رد من الإدارة <span class="badge badge-danger float-left"><%=data[0][0].open_session_count%></span></div>
+  <form class="rtl text-right px-4 f13" id="new_session_form">
+    <!-- Material input -->
+<div class="md-form">
+  <input placeholder="الموضوع" name="subject" type="text" id="subject" class="form-control">
+</div>
+
+
+<div class="clearfix py-2 border-bottom">
+        <span class="float-left"><div class="switch f13 text-right rtl">
+  <label class="mb-0 mt-1">
+    
+    <input type="checkbox" name="classefid">
+    <span class="lever"></span>
+  </label>
+</div></span>
+
+        <span class="float-right f15 rtl">سرية <i class="fas fa-question-circle px-2" data-toggle="popover"  data-content="في حال تفعيل هذا الخيار لن يتم رؤوية هذه الجلسة إلا من قبل الإدارة فقط"></i></span>
+        </div>
+
+
+<div class="form-group shadow-textarea mt-4">
+  <textarea class="form-control z-depth-1" name="message"  rows="3" placeholder="الرسالة"></textarea>
+</div>
+<div class="text-center mb-2">
+<button type="button" class="btn btn-info btn-sm" onclick="delay(function(){upload_data()},500)">إرسال</button>
+</div>
+  </form>
+  <div>
+  <ul class="nav nav-tabs nav-justified md-tabs indigo mb-3 f13 rtl" id="myTabJust" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="" data-toggle="tab" href="#home-just" role="tab" aria-controls="home-just" aria-selected="true" onclick="$('.sessions_table_body').html('');sessions_index=0;sessions_type='public';$('.more_sessions_button').show();get_sessions(sessions_index,sessions_type)">الجلسات العامة</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="" data-toggle="tab" href="#profile-just" role="tab" aria-controls="profile-just" aria-selected="false" onclick="$('.sessions_table_body').html('');sessions_index=0;sessions_type='private';$('.more_sessions_button').show();get_sessions(sessions_index,sessions_type)">جلساتي <%if(data[1][0].my_sessions_response>0){%><span class="badge badge-danger mx-2"><%=data[1][0].my_sessions_response%></span><%}%></a>
+  </li>
+</ul>
+</div>
+
+<div class="table-responsive px-3 rtl text-right" style="max-height:400px;overflow:auto"><table id="tablePreview" class="table table-striped table-hover">
+            <!--Table head-->
+            <thead>
+              <tr>
+                <th>عنوان الجلسة</th>
+                <th>بواسطة</th>
+                <th>الحالة</th>
+                <th>التاريخ</th>
+              </tr>
+            </thead>
+            <tbody class="sessions_table_body">
+              
+            </tbody>
+            <!--Table body-->
+          </table>
+</div>
+<div class="text-center">
+<button type="button" class="btn btn-light btn-sm mb-4 more_sessions_button" onclick="get_sessions(sessions_index,sessions_type);">المزيد</button>
+</div>
+
+      </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    var sessions_index=0;
+    var sessions_type="public";
+    $(function () {$('[data-toggle="popover"]').popover({trigger:"hover"})})
+
+    function upload_data()
+{
+
+  $.post("/create_new_session",$("#new_session_form").serialize(),function(data){if(data==1){toastr.success('تم إضافة طلبك بنجاح');$("#modal_contact_form").modal('hide');}})
+
+
+}
+
+function get_sessions(index,type){$.post("/get_sessions",{index:index,type:type},function(data){if(data.length<5){$(".more_sessions_button").hide()};data.forEach(function(row,index)
+  {
+    $(".sessions_table_body").append('<tr><td class="pointer hover_underline w_600" onclick="$(\'#modal_contact_form\').modal(\'hide\');get_session_modal('+row.id+')">'+row.subject+'</td><td class="hover_underline pointer w_600" onclick="location.href=\'/profile/'+row.add_by+'\'">'+row.username+'</td><td>'+row.status+'</td><td class="time_ago_dom" when="'+row.add_date+'"></td></tr>')
+  });set_when();sessions_index++})}
+get_sessions(sessions_index,sessions_type);
+
+  </script>
+</div>

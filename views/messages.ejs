@@ -1,0 +1,53 @@
+<!-- Modal -->
+<div class="modal left  fade" id="messages_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <style type="text/css">
+  .unreaded {background: #f7ebeb !important}
+  .one_message {margin-top:-1px;}
+</style>
+  <div class="modal-dialog modal-full-height modal-left modal-info modal-notify" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-white">
+        <div class="modal-title d-block text-right w-100 f13 rtl" id="exampleModalLabel"><i class="fas fa-comments px-2"></i> صندوق الرسائل <i class="fas fa-sync-alt px-3 pointer" id="load_more_general_messages_trigger" title="رسائل أقدم"></i> <i class="far fa-arrow-left pointer" data-dismiss="modal"  title="عودة"></i></div>
+      </div>
+      <div class="modal-body p-0" style="background: #f9f1f1;overflow-y: auto;max-height: calc(100vh - 130px);">
+       <ul class="list-unstyled mb-0" id="general_messages_box"></ul>
+      </div>
+      <div class="modal-footer text-center d-block w-100">
+        <button type="button" class="btn btn-primary btn-rounded btn-sm" onclick="mark_all_as_readed()">تحديد الكل كمقروء</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script type="text/javascript" src="/js/clamp.js"></script>
+<script type="text/javascript">
+var general_mesages_index=0;
+var stop_general_mesages=0;
+  $(document).on("click","#load_more_general_messages_trigger",function(){get_generals_messages()})
+  
+  get_generals_messages()
+  var header=$(".tranced_text");
+    for(var i=0;i<header.length;i++)
+    {  one_message=$(".tranced_text").get(i);
+       $clamp(one_message,{clamp: 2});  
+    }
+
+  function get_generals_messages(){
+    if(stop_general_mesages==0){$.post("/get_generals_messages",{index:general_mesages_index},function(data){if(data==0){stop_general_mesages=1}else{;append_general_messages(data);general_mesages_index=general_mesages_index+20}})}else{toastr.info("إنتهت النتائج")}}
+  function append_general_messages(data)
+{  $("#general_messages_box").html("")
+   data.forEach(function(message,index)
+   {
+
+  var seen="";if(message.seen==0){seen="unreaded"}
+$("#general_messages_box").append('<li data-dismiss="modal" onclick="get_chat_box('+message.m_from+')" class="media '+seen+' rtl text-right py-2 px-2 waves-effect one_message pointer" style="background: white;box-shadow: inset 0px 0px 0px 1px #ddd;"> <img class="d-flex ml-3 img-thumbnail align-self-center" src="'+message.profile_photo+'" alt="Generic placeholder image" style="width:80px;height:80px;"> <div class="media-body"> <h5 class="my-0 f15 font-weight-bold">'+message.m_from_name+' <span class="f12">('+message.rank+')</span></h5> <!--Review--> <span class="badge badge-primary mb-2 mt-0 time_ago_dom" when="'+message.add_date+'"></span> <p class="f11 tranced_text mb-0">'+message.body+'</p> </div> </li>')
+
+
+   })
+  
+  set_when()
+}
+
+function mark_all_as_readed(){$.post("/mark_all_messages_reader",function(data){if(data==1){toastr.success("تم تعليم جميع الرسائل كرسائل مقرؤة");$(".unreaded").removeClass("unreaded")}})}
+</script>
+</div>

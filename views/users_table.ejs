@@ -1,0 +1,76 @@
+<div class="w-responsive p-2  text-center ltr card" id="users_section">
+<div class="alert text-white card  text-center" style="background: rgb(63, 92, 128);" role="alert">المستخدمين</div>
+<div class="my-2  text-center d-block">
+	
+</div>
+
+
+<div class="table-responsive"><table id="tablePreview" class="table table-striped table-hover  table-bordered">
+            <!--Table head-->
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>إسم المستخدم</th>
+                <th>البريد الإلكتروني</th>
+                <th>تاريخ الإنضمام</th>
+                <th>أخر ظهور</th>
+                <th>الرتبة</th>
+                <th>محظور</th>
+                <th>سبب الحظر</th>
+                <th>محظور بواسطة</th>
+                <th>عدد الفرق</th>
+                <th>عدد السلاسل</th>
+                <th>عدد التفاعلات</th>
+                <th>عدد البلاغات</th>
+                <th>إجرائات</th>
+              </tr>
+            </thead>
+            <!--Table head-->
+            <!--Table body-->
+            <tbody>
+                <%data.forEach(function(user,index){%>
+
+                <tr>
+                <th scope="row"><%=user.id%></th>
+                <td><%=user.username%></td>
+                <td><%=user.email%></td>
+                <td><%=user.join_date%></td>
+                <td class="time_ago_dom" when="<%=user.last_login%>"></td>
+                <td><%=user.rank%></td>
+                <td><%if(user.suspend==1){%>نعم<%}else{%>لا<%}%></td>
+                <td><%if(user.suspend==1){%><%=user.suspend_reason%><%}else{%>-<%}%></td>
+                <td><%if(user.suspend==1){%><%=user.suspend_by_user%><%}else{%>-<%}%></td>
+                <td><%=user.teams_count%></td>
+                <td><%=user.series_count%></td>
+                <td><%=user.reactions_count%></td>
+                <td><%=user.reports_count%></td>
+                <td>
+                    <a class="trigger info-color text-white waves-effect" href="/profile/<%=user.id%>" title="عرض"><i class="fas fa-eye"></i></a>
+                    <a class="trigger info-color text-white waves-effect" href="/cpanel?type=user&condition=one_user&index=<%=user.id%>" title="تفاصيل"><i class="fas fa-info"></i></i></a>
+                    <a class="trigger info-color text-white waves-effect" onclick="get_user_edit_modal(<%=user.id%>)" title="تعديل"><i class="fas fa-cog"></i></a>
+                
+                
+                
+                </td>
+              </tr>
+
+                <%})%>
+              
+
+            </tbody>
+            <!--Table body-->
+          </table></div>
+
+<div>
+<button class="btn btn-primary d-inline btn-rounded btn-sm" onclick="get_users_table(<%=parseInt(current_page)+1%>,<%=condition%>)" title="التالي"><i class="fas fa-angle-double-left"></i></button>
+<button class="btn btn-primary d-inline btn-rounded btn-sm" <%if(parseInt(current_page)-1>0){%>onclick="get_users_table(<%=parseInt(current_page)-1%>,<%=condition%>)"<%}%> title="السابق"><i class="fas fa-angle-double-right"></i></button>
+</div>
+	
+</div>
+<script type="text/javascript">
+set_when()
+
+
+</script>
+
+</div>

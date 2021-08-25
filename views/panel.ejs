@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+<title>لوحة تحكم</title>
+<%- include styles %>
+<style type="text/css">
+    .table-responsive td,.table-responsive th {white-space: nowrap;}
+	.w-responsive {width:84%;}
+	@media (max-width: 1400px)
+	{
+.w-responsive {
+    width: 100%;
+}
+}
+
+.trigger {
+  padding: 1px 10px;
+  font-size: 12px;
+  font-weight: 400;
+  border-radius: 10px;
+  background-color: #eee;
+  color: #212121;
+  display: inline-block;
+  margin: 2px 5px;
+}
+
+.hoverable, .trigger {
+  transition: box-shadow 0.55s;
+  box-shadow: 0;
+}
+
+.hoverable:hover, .trigger:hover {
+  transition: box-shadow 0.45s;
+  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+</style>
+</head>
+
+
+<body class="light-blue-skin">
+<%- include header %>
+<main class="content container-fluid mt-10">
+
+<!-- SideNav slide-out button -->
+
+<a href="#" data-activates="slide-out" class="btn btn-primary  button-collapse btn-rounded  position-fixed" style="bottom:50px;left:50px;z-index:10"><i class="fas fa-bars"></i></a>
+
+
+
+<!-- Sidebar navigation -->
+<div id="slide-out" class="side-nav fixed" style="background-image: url('/img/main/header_bg.jpg')">
+  <ul class="custom-scrollbar">
+    <!-- Logo -->
+    <li>
+      <div class="logo-wrapper waves-light">
+       <div class="text-center text-white" style="font-size:60px !important"><i class="fab fa-cpanel"></i></div>	
+    </div>
+    </li>
+    <!--/. Logo -->
+
+
+    <!--Search Form-->
+    <li style="overflow: visible;">
+      <div class="search-form" style="overflow: visible;">
+<div class="form f15 d-none d-sm-block position-relative dropdown prevent-close form-group md-form mt-0 pt-1 " style="overflow: visible;">
+    <input type="text" data-toggle="dropdown" aria-haspopup="false"  aria-expanded="false" class="form-control text-left px-3" id="cpanel_search" placeholder="بحث" style="box-sizing: border-box;border-bottom: solid 1px #eceaea33;background-image: url('img/main/search_white.png');background-repeat: no-repeat;background-size: auto 50%;background-position: 95% center">
+        <div class="dropdown-menu position-absolute w-100 p-0 px-0" aria-labelledby="dropdownMenuButton">
+  <ul class="list-group  px-0  p-0 ltr  search-result-ul rounded mb-0"></ul>
+</div>
+  </div>
+</div>
+    </li>
+    <!--/.Search Form-->
+    <!-- Side navigation links -->
+    <li>
+      <ul class="collapsible collapsible-accordion">
+      	<li><a class="waves-effect arrow-r" href="/cpanel"><i class="fas fa-presentation"></i> عام</a></li>
+        <li><a class="collapsible-header waves-effect arrow-r"><i class="fas fa-user"></i> المستخدمين<i
+              class="fas fa-angle-down rotate-icon"></i></a>
+          <div class="collapsible-body">
+            <ul>
+          <li><a href="/cpanel?type=user&condition=1" class="waves-effect" onclick="get_users_table(1,1)">الكل</a></li>
+    <li><a href="/cpanel?type=user&condition=2" class="waves-effect" >المحظورين <span class="badge badge-danger ml-2"><%=data[0][0].blocked_users_count%></span></a></li>
+    <li><a href="/cpanel?type=user&condition=3" class="waves-effect" >المدراء <span class="badge badge-danger ml-2"><%=data[0][0].admins_count%></span></a></li>
+     <li><a href="/cpanel?type=user&condition=4" class="waves-effect">المستخدمين <span class="badge badge-danger ml-2"><%=data[0][0].users_count%></span></a></li>
+    <li><a href="/cpanel?type=user&condition=5" class="waves-effect">المتصلين <span class="badge badge-danger ml-2"><%=data[0][0].online_users_count%></span></a></li>
+    <li><a href="/cpanel?type=user&condition=6" class="waves-effect">المستخدمين الجدد <span class="badge badge-danger ml-2"><%=data[0][0].new_users%></span></a></li>
+              
+            </ul>
+          </div>
+        </li>
+   <li><a class="collapsible-header waves-effect arrow-r"><i class="fas fa-users"></i> الفرق  <%if(data[1][0].team_pending_count > 0){%><span class="badge badge-danger ml-2"><%=data[1][0].team_pending_count%></span> <%}%>
+   	<i class="fas fa-angle-down rotate-icon"></i></a>
+          <div class="collapsible-body">
+            <ul>
+              <li><a href="cpanel?type=teams&condition=4" class="waves-effect">الكل</a></li>
+              <li><a href="cpanel?type=teams&condition=5" class="waves-effect">المحظورة <span class="badge badge-danger ml-2"><%=data[1][0].blocked_teams%></span></a></li>
+              <li><a href="cpanel?type=teams&condition=6" class="waves-effect">معلقة <span class="badge badge-danger ml-2"><%=data[1][0].team_pending_count%></span></a></li>
+              <li><a href="cpanel?type=teams&condition=7" class="waves-effect">فرق معلنة <span class="badge badge-danger ml-2"><%=data[1][0].advertising_teams_count%></span></a></li>
+            </ul>
+          </div>
+        </li>
+        <li><a class="collapsible-header waves-effect arrow-r"><i class="fas fa-theater-masks"></i> السلاسل <%if(data[2][0].series_pending_count > 0){%>
+<span class="badge badge-danger ml-2"><%=data[2][0].series_pending_count%></span>
+        	<%}%><i class="fas fa-angle-down rotate-icon"></i></a>
+          <div class="collapsible-body">
+            <ul>
+    <li><a href="/cpanel?type=series&condition=2" class="waves-effect">الكل</a></li>
+    <li><a href="/cpanel?type=series&condition=4" class="waves-effect">المحذوفة <span class="badge badge-danger ml-2"><%=data[2][0].deleted_series_count || 0%></span></a></li>
+    <li><a href="/cpanel?type=series&condition=5" class="waves-effect">غير مصرحة <span class="badge badge-danger ml-2"><%=data[2][0].series_pending_count%></span></a></li>
+    <li><a href="/cpanel?type=series&condition=6" class="waves-effect">الأكثر تفاعلا</a></li>
+            </ul>
+          </div>
+        </li>
+        <li><a class="collapsible-header waves-effect arrow-r"><i class="fas fa-book-open"></i> الفصول<i
+              class="fas fa-angle-down rotate-icon"></i></a>
+          <div class="collapsible-body">
+            <ul>
+  <li><a href="/cpanel?type=chapters&condition=3" class="waves-effect">الكل</a></li>
+<li><a href="/cpanel?type=chapters&condition=4" class="waves-effect">المحذوفة <span class="badge badge-danger ml-2"><%=data[3][0].deleted_chapters_count || 0%></span></a></li>
+<li><a href="/cpanel?type=chapters&condition=5" class="waves-effect">الأكثر مشاهدة</a></li>
+             
+            </ul>
+          </div>
+        </li>
+        <li><a class="collapsible-header waves-effect arrow-r"><i class="fas fa-flag"></i> البلاغات <%if(data[4][0].pending_reports_count && data[4][0].pending_reports_count>0){%>
+<span class="badge badge-danger ml-2"><%=data[4][0].pending_reports_count%></span> 
+        	<%}%><i class="fas fa-angle-down rotate-icon"></i></a>
+          <div class="collapsible-body">
+            <ul>
+              <li><a href="/cpanel?type=reports&condition=1" class="waves-effect">الكل</a></li>
+<li><a href="/cpanel?type=reports&condition=4" class="waves-effect">غير معالجة <span class="badge badge-danger ml-2"><%=data[4][0].pending_reports_count%></span> </a></li>
+
+            </ul>
+          </div>
+        </li>
+        <li><a class="collapsible-header waves-effect arrow-r"><i class="fas fa-comments"></i> التواصل <%if(data[5][0].waitng_sessions>0){%><span class="badge badge-danger ml-2"><%=data[5][0].waitng_sessions || 0%></span><%}%><i class="fas fa-angle-down rotate-icon"></i></a>
+          <div class="collapsible-body">
+            <ul>
+              <li><a href="/cpanel?type=sessions&condition=1" class="waves-effect">الكل</a>
+              </li>
+          <li><a href="/cpanel?type=sessions&condition=3" class="waves-effect">بالإنتظار <span class="badge badge-danger ml-2"><%=data[5][0].waitng_sessions || 0%></span></a>
+              </li>
+              <li><a href="/cpanel?type=sessions&condition=2" class="waves-effect">المفتوح <span class="badge badge-danger ml-2"><%=data[5][0].open_session || 0%></span></a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li><a class="collapsible-header waves-effect arrow-r"><i class="fas fa-bookmark"></i> النشاطات<i class="fas fa-angle-down rotate-icon"></i></a>
+          <div class="collapsible-body">
+            <ul>
+              <li><a href="/cpanel?type=activity&condition=1" class="waves-effect">الكل</a></li>
+              
+            </ul>
+          </div>
+        </li>
+        
+  
+        </li>
+      </ul>
+    </li>
+    <!--/. Side navigation links -->
+  </ul>
+  <div class="sidenav-bg rgba-blue-strong"></div>
+</div>
+<!--/. Sidebar navigation -->
+
+<div class="w-100 rtl" id="append_area">
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+</main>
+<%- include scripts %>
+ <script type="text/javascript">
+
+
+
+
+ 	// SideNav Button Initialization
+$(".button-collapse").sideNav();
+// SideNav Scrollbar Initialization
+var sideNavScrollbar = document.querySelector('.custom-scrollbar');
+Ps.initialize(sideNavScrollbar);
+
+
+
+$(document).on("keyup","#cpanel_search",function(e){var trigger=$(this);trigger.addClass("rounded_loader");var word=$(this).val();if(word.trim()!="")delay(function(){$.post("/search_data",{word:word},function (data){trigger.removeClass("rounded_loader");menu=trigger.parent().find("ul");menu.html("");menu.append('<span class="badge badge-info py-2">سلاسل</span>');;data.manga.forEach(function(manga,index){menu.append('<li onclick="location.href=\'/cpanel?type=series&condition=one_series&index='+manga.id+'\'" class="list-group-item  p-0  border-0"><div class="chip chip-md  white-text waves-effect waves-effect w-100 m-0 rounded-0 one_search_result"><img class="rounded-0" src="'+manga.series_profile+'" alt=""><div class="d-inline-block float-left h-100 search_box_body_width">'+manga.series_name+'</div><div class="d-inline float-right"></div></div></li>')});menu.append('<span class="badge badge-info py-2">مجموعات</span>');;data.teams.forEach(function(team,index){menu.append('<li class="list-group-item  p-0  border-0" onclick="location.href=\'/cpanel?type=teams&condition=one_team&index='+team.id+'\'"><div class="chip chip-md  white-text waves-effect waves-effect w-100 m-0 rounded-0 one_search_result"><img class="rounded-0" src="'+team.team_profile+'" alt=""><div class="d-inline-block float-left h-100 search_box_body_width">'+team.team_name+'</div><div class="d-inline float-right"></div></div></li>')});menu.append('<span class="badge badge-info py-2">مستخدمين</span>');;data.users.forEach(function(user,index){menu.append('<li class="list-group-item  p-0  border-0" onclick="location.href=\'/cpanel?type=user&condition=one_user&index='+user.id+'\'"><div class="chip chip-md  white-text waves-effect waves-effect w-100 m-0 rounded-0 one_search_result"><img class="rounded-0" src="'+user.profile_photo+'" alt=""><div class="d-inline-block float-left h-100 search_box_body_width">'+user.username+'</div><div class="d-inline float-right"></div></div></li>')});if($(trigger).parent().children(".dropdown-menu").is(":hidden")){trigger.click()}});},1000)})
+
+
+
+function get_users_table(index,condition){$.post("/users_table",{condition:condition,index:index},function(data){if(data!=""){$("#users_section").remove();$("#append_area").append(data);}})}
+function get_teams_table(index,condition){$.post("/teams_table",{condition:condition,index:index,link_id:<%=link_id%>},function(data){if(data!=""){$("#teams_section").remove();$("#append_area").append(data)}})}
+function get_series_table(index,condition){$.post("/series_table",{condition:condition,index:index,link_id:<%=link_id%>},function(data){if(data!=""){$("#series_section").remove();$("#append_area").append(data)}})}
+function get_chapters_table(index,condition){$.post("/chapters_table",{condition:condition,index:index,link_id:<%=link_id%>},function(data){if(data!=""){$("#chapters_section").remove();$("#append_area").append(data)}})}
+function get_activity_table(index,condition){$.post("/activity_table",{condition:condition,index:index,link_id:<%=link_id%>},function(data){if(data!=""){$("#activity_section").remove();$("#append_area").append(data)}})}
+function get_sessions_table(index,condition){$.post("/sessions_table",{condition:condition,index:index,link_id:<%=link_id%>},function(data){if(data!=""){$("#sessions_section").remove();$("#append_area").append(data)}})}
+function get_reports_table(index,condition){$.post("/reports_table",{condition:condition,index:index,link_id:<%=link_id%>},function(data){if(data!=""){$("#report_section").remove();$("#append_area").append(data)}})}
+function get_main_cpanel_board(){$.post("/main_cpanel_board",function(data){$("#append_area").append(data);})}
+<%-command%>
+ </script>
+
+</body>
+
+</html>

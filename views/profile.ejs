@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+<title><%=data[0][0].username%> - mymanga</title>
+<%- include styles %>
+
+<style type="text/css">
+	.box_shadow {box-shadow: rgb(216, 219, 222) 0px 1px 2px 0px;}
+</style>
+</head>
+
+
+<body class="light-blue-skin">
+<%- include header %>
+<main class="content container-fluid mt_70_px">
+<div  class="row">
+
+
+
+
+<!-- body -->
+<div class="col-xl-12">
+<div class="row"><div class="col-12 blue-gradient color-block w-100 py-3">
+<img src="<%=data[0][0].profile_photo%>" alt="thumbnail" class="img-thumbnail mt-3 mx-auto d-block  rounded-circle card"
+  style="width: 200px;height:200px;object-fit: cover;">
+ <div class="w-100 text-center mt-2  text-white w_600" style="font-family: sans-serif;font-size:18px !important"><%=data[0][0].username%> (<%=data[0][0].rank%>)</div>
+ <div class="w-100 text-center mt-1  text-white  f11"><%if(data[0][0].suspend==0){%><span id="when_active"></span><%}else{%>هذا الحساب محظور السبب : <%=data[0][0].suspend_reason%><%}%></div>	
+ 
+<div class="d-block text-center mt-1 text-white" style="font-size:18px">
+  <span class="btn btn-rounded btn-sm" onclick="get_chat_box(<%=data[0][0].id%>)"><i class="fas fa-envelope  pointer"></i></span>
+  <%if(data[1].length>0){%><span class="btn btn-rounded btn-sm" onclick="get_user_edit_modal(<%=data[0][0].id%>)"><i class="pointer  fas fa-user-cog"></i></span><%}%>
+</div>
+ 
+ 
+</div></div>
+<div class="row box_shadow rtl">
+	
+	
+
+
+	<div class="col-md-12">
+		
+		<ul class="nav md-pills pills-secondary nav-justified row">
+  <li class="nav-item col-md-3">
+    <a class="nav-link active" data-toggle="tab" href="#library" role="tab">مكتبة <span class="d-none d-md-inline d-lg-inline">العضو</span></a>
+  </li>
+  <li class="nav-item col-md-3">
+    <a class="nav-link" data-toggle="tab" href="#teams" role="tab">الفرق <span class="d-none d-md-inline d-lg-inline">المنضم لها</span></a>
+  </li>
+  <li class="nav-item col-md-3">
+    <a class="nav-link" data-toggle="tab" href="#chapters" role="tab">الفصول <span class="d-none d-md-inline d-lg-inline">المرفوعة</span></a>
+  </li>
+  <li class="nav-item col-md-3">
+    <a class="nav-link" data-toggle="tab" href="#comments" role="tab">التعليقات</a>
+  </li>
+</ul>
+
+	</div>
+</div>
+
+
+<div class="tab-content   mt-4 mb-4" id="myTabContentMD">
+  <div class="tab-pane fade show active" id="library" role="tabpanel" aria-labelledby="home-tab-md">
+   <div class="row rtl">
+   	<div class="col-md-3">
+   	<div class="text-right">
+   		<ul class="nav nav-tabs card list-group list-group-flush p-0 m-0  rtl text-black" id="myTabMD" role="tablist">
+  <li class="nav-item list-group-item list-group-item-action">
+    <a class="active w-100 h-100 d-block" id="home-tab-md" data-toggle="tab" href="#liked" role="tab" aria-controls="liked" aria-selected="true">قصص معجب بها  <span class="badge badge-primary badge-pill"><%=data[4].length%></span></a>
+  </li>
+  <li class="nav-item list-group-item list-group-item-action">
+    <a class="w-100 h-100 d-block" id="profile-tab-md" data-toggle="tab" href="#reading" role="tab" aria-controls="reading" aria-selected="false">قصص يقرأها <span class="badge badge-primary badge-pill"><%=data[5].length%></span></a>
+  </li>
+  <li class="nav-item list-group-item list-group-item-action">
+    <a class="w-100 h-100 d-block" id="contact-tab-md" data-toggle="tab" href="#want_read" role="tab" aria-controls="want_read" aria-selected="false">قصص ينوي قرأتها <span class="badge badge-primary badge-pill"><%=data[6].length%></span></a>
+  </li>
+  <li class="nav-item list-group-item list-group-item-action">
+    <a class="w-100 h-100 d-block" id="contact-tab-md" data-toggle="tab" href="#comp_read" role="tab" aria-controls="comp_read" aria-selected="false">قصص أكمل قرأتها <span class="badge badge-primary badge-pill"><%=data[7].length%></span></a>
+  </li>
+  <li class="nav-item list-group-item list-group-item-action">
+    <a class="w-100 h-100 d-block" id="contact-tab-md" data-toggle="tab" href="#stop_read" role="tab" aria-controls="stop_read" aria-selected="false">توقف عن قرأتها <span class="badge badge-primary badge-pill"><%=data[8].length%></span></a>
+  </li>
+  <li class="nav-item list-group-item list-group-item-action">
+    <a class="w-100 h-100 d-block" id="contact-tab-md" data-toggle="tab" href="#added" role="tab" aria-controls="added" aria-selected="false">قصص أضافها <span class="badge badge-primary badge-pill"><%=data[9].length%></span></a>
+  </li>
+</ul>
+</div>	
+   	</div>
+   	<div class="col-md-9">
+   		<div class="tab-content card">
+  <div class="tab-pane fade show active" id="liked" role="tabpanel" aria-labelledby="home-tab-md">
+  	<%var j=0;data[4].forEach(function(reacted,index){%>
+     <%if(index%4==0){%><div class="card-deck mt-3"><%}%>
+
+     	<div class="card booking-card"><div class="card-body"><h4 class="card-title font-weight-bold points_overflow"><%=reacted.series_name%></h4><hr class="my-4"><p class="lead mb-1"><strong>التصنيفات</strong></p><div class="d-block w-100 mb-3"><%reacted.classifecation.split(",").forEach(function(clas,index){%>
+             <span class="badge badge-primary mx-1 pointer" onclick="show_class('<%=clas%>')"><%=clas%></span>
+     		<%})%></div><a href="/manga/<%=reacted.id%>" class="btn btn-primary py-2 mx-0 mb-0">تفاصيل</a></div></div>
+
+     <%j++;if(j==4 || data[4].length-1==index){%></div><%;j=0}})%>
+
+  </div>
+  <div class="tab-pane fade" id="reading" role="tabpanel" aria-labelledby="profile-tab-md">
+   <%var j=0;data[5].forEach(function(reacted,index){%>
+     <%if(index%4==0){%><div class="card-deck mt-3"><%}%>
+
+     	<div class="card booking-card"><div class="card-body"><h4 class="card-title font-weight-bold points_overflow"><%=reacted.series_name%></h4><hr class="my-4"><p class="lead mb-1"><strong>التصنيفات</strong></p><div class="d-block w-100 mb-3"><%reacted.classifecation.split(",").forEach(function(clas,index){%>
+             <span class="badge badge-primary mx-1 pointer" onclick="show_class('<%=clas%>')"><%=clas%></span>
+     		<%})%></div><a href="/manga/<%=reacted.id%>" class="btn btn-primary py-2 mx-0 mb-0">تفاصيل</a></div></div>
+
+     <%j++;if(j==4 || data[5].length-1==index){%></div><%;j=0}})%>
+  </div>
+  <div class="tab-pane fade" id="want_read" role="tabpanel" aria-labelledby="contact-tab-md">
+   <%var j=0;data[6].forEach(function(reacted,index){%>
+     <%if(index%4==0){%><div class="card-deck mt-3"><%}%>
+
+     	<div class="card booking-card"><div class="card-body"><h4 class="card-title font-weight-bold points_overflow"><%=reacted.series_name%></h4><hr class="my-4"><p class="lead mb-1"><strong>التصنيفات</strong></p><div class="d-block w-100 mb-3"><%reacted.classifecation.split(",").forEach(function(clas,index){%>
+             <span class="badge badge-primary mx-1 pointer" onclick="show_class('<%=clas%>')"><%=clas%></span>
+     		<%})%></div><a href="/manga/<%=reacted.id%>" class="btn btn-primary py-2 mx-0 mb-0">تفاصيل</a></div></div>
+
+     <%j++;if(j==4 || data[6].length-1==index){%></div><%;j=0}})%>
+  </div>
+  <div class="tab-pane fade" id="comp_read" role="tabpanel" aria-labelledby="contact-tab-md">
+    <%var j=0;data[7].forEach(function(reacted,index){%>
+     <%if(index%4==0){%><div class="card-deck mt-3"><%}%>
+
+     	<div class="card booking-card"><div class="card-body"><h4 class="card-title font-weight-bold points_overflow"><%=reacted.series_name%></h4><hr class="my-4"><p class="lead mb-1"><strong>التصنيفات</strong></p><div class="d-block w-100 mb-3"><%reacted.classifecation.split(",").forEach(function(clas,index){%>
+             <span class="badge badge-primary mx-1 pointer" onclick="show_class('<%=clas%>')"><%=clas%></span>
+     		<%})%></div><a href="/manga/<%=reacted.id%>" class="btn btn-primary py-2 mx-0 mb-0">تفاصيل</a></div></div>
+
+     <%j++;if(j==4 || data[7].length-1==index){%></div><%;j=0}})%>
+  </div>
+  <div class="tab-pane fade" id="stop_read" role="tabpanel" aria-labelledby="contact-tab-md">
+    <%var j=0;data[8].forEach(function(reacted,index){%>
+     <%if(index%4==0){%><div class="card-deck mt-3"><%}%>
+
+     	<div class="card booking-card"><div class="card-body"><h4 class="card-title font-weight-bold points_overflow"><%=reacted.series_name%></h4><hr class="my-4"><p class="lead mb-1"><strong>التصنيفات</strong></p><div class="d-block w-100 mb-3"><%reacted.classifecation.split(",").forEach(function(clas,index){%>
+             <span class="badge badge-primary mx-1 pointer" onclick="show_class('<%=clas%>')"><%=clas%></span>
+     		<%})%></div><a href="/manga/<%=reacted.id%>" class="btn btn-primary py-2 mx-0 mb-0">تفاصيل</a></div></div>
+
+     <%j++;if(j==4 || data[8].length-1==index){%></div><%;j=0}})%>
+  </div>
+  <div class="tab-pane fade" id="added" role="tabpanel" aria-labelledby="contact-tab-md">
+    <%var j=0;data[9].forEach(function(reacted,index){%>
+     <%if(index%4==0){%><div class="card-deck mt-3"><%}%>
+
+     	<div class="card booking-card"><div class="card-body"><h4 class="card-title font-weight-bold points_overflow"><%=reacted.series_name%></h4><hr class="my-4"><p class="lead mb-1"><strong>التصنيفات</strong></p><div class="d-block w-100 mb-3"><%reacted.classifecation.split(",").forEach(function(clas,index){%>
+             <span class="badge badge-primary mx-1 pointer" onclick="show_class('<%=clas%>')"><%=clas%></span>
+     		<%})%></div><a href="/manga/<%=reacted.id%>" class="btn btn-primary py-2 mx-0 mb-0">تفاصيل</a></div></div>
+
+     <%j++;if(j==4 || data[9].length-1==index){%></div><%;j=0}})%>
+  </div>
+</div>
+   	</div>
+   </div>
+  </div>
+  <div class="tab-pane fade" id="teams" role="tabpanel" aria-labelledby="profile-tab-md">
+  	<%var j=0;data[3].forEach(function(team,index){%>
+     <%if(index%4==0){%><div class="card-deck mt-3"><%}%>
+      
+          	<!-- Card -->
+<div class="card testimonial-card pointer" onclick="location.href='/team/<%=team.id%>'">
+
+  <!-- Background color -->
+  <div class="card-up indigo lighten-1"></div>
+
+  <!-- Avatar -->
+  <div class="avatar mx-auto white">
+    <img src="<%=team.team_profile%>" class="rounded-circle" alt="woman avatar">
+  </div>
+
+  <!-- Content -->
+  <div class="card-body">
+    <!-- Name -->
+    <h4 class="card-title"><%=team.team_name%></h4>
+    <hr>
+    <!-- Quotation -->
+    <%if(team.team_status!=null && team.team_status!=""){%>
+     <p class="rtl"><i class="fa fa-quote-right"></i> <%=team.team_status%></p>
+    <%}%>
+    
+  </div>
+
+</div>
+<!-- Card -->
+
+
+    <%j++;if(j==4 || data[3].length-1==index){%></div><%;j=0}})%>
+
+
+  </div>
+  <div class="tab-pane fade" id="chapters" role="tabpanel" aria-labelledby="contact-tab-md">
+  	<%var i=0;data[2].forEach(function(chapter,index){%>
+     <%if(index%4==0){%><div class="card-deck mt-3"><%}%>
+
+     	    	<!-- Card -->
+<div class="card ">
+
+  <!-- Card image -->
+  <div class="view overlay">
+    <div class="w-100  danger-color text-white text-center py-4" style="font-size:80px"><i class="fas fa-book-open"></i></div>
+    <a>
+      <div class="mask rgba-white-slight"></div>
+    </a>
+  </div>
+
+
+
+  <!-- Card content -->
+  <div class="card-body">
+
+    <!-- Title -->
+    <h4 class="card-title text-center pointer" onclick="location.href='/manga/<%=chapter.series_number%>'"><%=chapter.series_name%></h4>
+    <hr>
+     <h6 class="card-title text-center pointer" onclick="location.href='/reader/<%=chapter.id%>'">الفصل رقم <%=chapter.chapter_number%></h6>
+     <hr>
+     <h6 class="card-title text-center rtl f12">فريق <a href="/team/<%=chapter.by_team%>"><%=chapter.team_name%></a></h6>
+
+   
+
+  </div>
+
+
+
+</div>
+
+<!-- Card -->
+
+  	<%i++;if(i==4 || data[2].length-1==index){%></div><%;i=0}})%>
+
+
+
+  </div>
+  <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="contact-tab-md">
+    <ul class="m-0 p-0 comments_ul">
+      
+    </ul>
+    <div class="text-center">
+      <button class="btn btn-info rounded f12 more_comments_trigger" onclick="get_user_comments(<%=data[0][0].id%>)">المزيد</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+</div>
+<!-- /body -->
+
+
+
+
+</main>
+<%- include footer %>
+<%- include scripts %>
+<script type="text/javascript">
+  var index=0
+$(document).ready(function()
+{
+	$("#when_active").html(jQuery.timeago(new Date("<%=data[0][0].last_login%>")));
+})	
+get_user_comments(<%=data[0][0].id%>)
+function get_user_comments(id){$.post("/user_comments",{id:id,index:index},function(data)
+{  if(data.length<10){$(".more_comments_trigger").remove()}
+  data.forEach(function(data,index)
+  {
+     $(".comments_ul").append('<li class="list-group-item rtl text-right d-flex align-items-center mb-1"><img src="'+data.profile_photo+'" class="rounded-circle z-depth-1-half img-thumbnail" style="width:70px!important;height:70px!important"><div class="mr-2 w-75"><a class="name f12" href="/profile/'+data.by_member+'">'+data.username+'</a> <span class="date time_ago_dom f10 text-default" when="'+data.add_date+'"></span><div class="d-flex" align-items-center"=""><span class="badge badge-primary  h-100 py-1" style="font-size:9px">علق على '+data.type+'</span></div><div class="added-text  mw-100 f11 mt-1 w-100 one_row" style="overflow: hidden; text-overflow: ellipsis; -webkit-box-orient: vertical; display: -webkit-box; -webkit-line-clamp: 1;">'+data.body+'</div></div></li>')
+  })
+  set_when()
+  index++;
+})}
+</script>
+</body>
+
+</html>

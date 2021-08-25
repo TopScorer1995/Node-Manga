@@ -1,0 +1,27 @@
+
+<!-- report Modal -->
+<div class="modal fade" id="report_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="form-group shadow-textarea">
+        <label for="exampleFormControlTextarea6" class="py-2 f13 text-right rtl w-100">تبليغ عن <%=name_to_show%> <%=report_on_name%></label>
+        <textarea class="form-control z-depth-1 f13 text-right rtl report_body"  rows="3" placeholder="كتابة بلاغ"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary py-2" data-dismiss="modal">إلغاء</button>
+        <button type="button" class="btn btn-primary py-2" id="modal_trigger" oid="<%=oid%>" process-type="<%=type%>" report_body="">تقديم</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- / report modal -->
+
+
+<script type="text/javascript">
+  
+$(".report_body").on("keyup",function(){var a=$(".report_body").val();$("#modal_trigger").attr("report_body",a)})
+$("#modal_trigger").on("click",function(){$.post("/report_confirm",{oid:$(this).attr("oid"),process_type:$(this).attr("process-type"),report_body:$(this).attr("report_body")},function(data){if(data==1){toastr.success("تمت الإضافة بنجاح");$("#report_modal").modal("hide");}})})
+
+</script>

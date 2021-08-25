@@ -1,0 +1,120 @@
+
+<!-- Modal -->
+<div class="modal fade" id="write_new_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content rtl text-right">
+      <div class="modal-header">
+        <h5 class="modal-title">إضافة خبر</h5>
+      </div>
+      <div class="modal-body">
+<form id="new_new_form" enctype="multipart/form-data">
+        <div class="card p-3">
+<!-- Material input -->
+<div class="md-form">
+  <input placeholder="عنوان الخبر" type="text" name="label" class="form-control rtl text-right">
+</div>
+
+<div class="md-form">
+  <div class="file-field">
+    <div class="btn btn-primary btn-sm float-left">
+      <span>إختر ملف</span>
+      <input type="file" name="wallpaper" id="news_wallpaper">
+    </div>
+    <div class="file-path-wrapper">
+      <input class="file-path validate text-right" type="text" placeholder="صورة رئيسية للخبر">
+    </div>
+  </div>
+</div>
+
+
+<textarea name="editor1" id="news_textarea"></textarea>
+<input type="hidden" name="body" value="" id="news_body">
+<button type="button" id="submit_new_form_button" class="btn btn-primary btn-rounded mt-4 rtl"><i class="far fa-plus"></i> إضافة الخبر</button>
+</div>
+</form>
+      </div>
+     
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+  
+
+
+  $(document).ready(function() {        
+CKEDITOR.config.language = 'ar';
+CKEDITOR.config.toolbar = [
+    { name: 'clipboard', groups: [ 'clipboard', 'undo' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteText', '-', 'Undo', 'Redo' ] },
+    { name: 'links', items: [ 'Link', 'Unlink'] },
+    { name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule', 'SpecialChar','EmojiPanel' ] },
+    { name: 'tools', items: [ 'Maximize' ] },
+    { name: 'document', groups: [ 'mode', 'document', 'doctools' ], items: [ 'Source' ] },
+    { name: 'others', items: [ '-' ] },
+    { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Strike', '-', 'RemoveFormat' ] },
+    { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-' ] },
+    { name: 'styles', items: [ 'Styles'] },
+    
+];
+
+
+        CKEDITOR.replace('editor1');
+});
+
+   $(document).on("click","#submit_new_form_button", function(e){
+    
+    if($("#news_wallpaper").val().trim()!="")
+    {
+
+
+    if($("#news_wallpaper")[0].files[0].size/1024/1024 > 5){
+       toastr.error("حجم الملف يجب أن لا يتجاوز 5 ميجا")
+       
+    }else{
+
+      var ext = $("#news_wallpaper").val().match(/\.([^\.]+)$/)[1];
+    switch(ext)
+    {
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+        case 'gif':
+            submit_news_form();
+            break;
+        default:
+            toastr.error('صيغة الملف غير مقبولة')
+            
+    }
+
+
+    };
+}else {toastr.error("يجب تحديد ملف صورة للخبر")}
+
+
+
+})
+
+
+function submit_news_form()
+{
+
+     $("#news_body").val(CKEDITOR.instances['news_textarea'].getData());
+    var form = new FormData($("#new_new_form")[0]);
+  $.ajax({
+        url: "/add_news",
+        method: "POST",
+        dataType: 'html',
+        data: form,
+        processData: false,
+        contentType: false,
+        success:function(data){if(data!="1"){toastr.error(data);}else{location.reload()}}
+
+
+})
+
+}
+
+
+
+</script>

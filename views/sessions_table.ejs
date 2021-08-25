@@ -1,0 +1,71 @@
+
+
+<!-- chapters page -->
+
+<div class="mt-2" id="sessions_section">
+<div class="w-responsive p-2  text-center ltr card">
+<div class="alert text-white card  text-center" style="background: rgb(63, 92, 128);" role="alert">الجلسات</div>
+<div class="my-2  text-center d-block">
+	
+</div>
+
+
+<div class="table-responsive"><table id="tablePreview" class="table table-striped table-hover  table-bordered">
+            <!--Table head-->
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>الموضوع</th>
+                <th>بواسطة</th>
+                <th>الحالة</th>
+                <th>محذوفة</th>
+                <th>محذوفة بواسطة</th>
+                <th>مغلقة بواسطة</th>
+                <th>النوع</th>
+                <th>تاريخ الإضافة</th>
+                <th>إجرائات</th>
+                
+                
+              </tr>
+            </thead>
+            <!--Table head-->
+            <!--Table body-->
+            <tbody>
+                <%data.forEach(function(row,index){%>
+
+                <tr>
+                <th scope="row"><%=row.id%></th>
+                <td><%=row.subject%></td>
+                <td><%=row.username_by%></td>
+                <td><%if(row.status==0){%>مفتوحة<%}else{%>مغلقة<%}%></td>
+                <td><%if(row.deleted==0){%>لا<%}else{%>نعم<%}%></td>
+                <td><%if(row.deleted_by){%><%=row.username_deleted_by%><%}else{%>-<%}%></td>
+                <td><%if(row.closed_by){%><%=row.username_closed_by%><%}else{%>-<%}%></td>
+                <td><%if(row.type==0){%>عامة<%}else{%>سرية<%}%></td>
+                 <td><%=row.add_date%></td>
+                <td>
+                   <%if(row.deleted==0){%> <a class="trigger info-color text-white waves-effect" title="تعديل" onclick="get_session_modal(<%=row.id%>)"><i class="fas fa-cog"></i></a>
+                   <%}%>
+                </td>
+              </tr>
+
+
+                <%})%>
+              
+            </tbody>
+            <!--Table body-->
+          </table></div>
+
+
+<div>
+<button class="btn btn-primary d-inline btn-rounded btn-sm" onclick="get_sessions_table(<%=parseInt(current_page)+1%>,<%=condition%>)" title="التالي"><i class="fas fa-angle-double-left"></i></button>
+<button class="btn btn-primary d-inline btn-rounded btn-sm" <%if(parseInt(current_page)-1>0){%>onclick="get_sessions_table(<%=parseInt(current_page)-1%>,<%=condition%>)"<%}%> title="السابق"><i class="fas fa-angle-double-right"></i></button>
+</div>
+	
+</div>
+<script type="text/javascript">
+
+</script>
+</div>
+
+<!-- chapters page -->

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+<title>mymanga - الأخبار</title>
+<%- include styles %>
+
+</head>
+
+
+<body class="light-blue-skin">
+<%- include header %>
+<main class="content container-fluid mt-10">
+<div class="append_news_area rtl"></div>
+<div class="text-center mt-2 more_section">
+<div class="btn rounded  btn-primary mx-auto" onclick="get_news()">المزيد</div>
+</div>
+
+
+
+
+
+
+
+</main>
+<%- include footer %>
+<%- include scripts %>
+ <script type="text/javascript" src="/js/clamp.js"></script>
+ <script type="text/javascript">
+var news_index=0;
+get_news();
+$("#next_page").on("click",function(){$("#active").next().click()})
+$("#prev_page").on("click",function(){$("#active").prev().click()})
+
+
+
+  
+
+ function get_news(){$.post("/get_news_box",{index:news_index},function(data)
+ { var append_data="";
+   var row_counter=0; 
+  if(data.length<10){$(".more_section").remove()}
+  data.forEach(function(row,index)
+  {  row_counter++;
+    if(index%2==0){append_data+='<div class="row">';}
+    append_data+='<div class="col-md-6 mb-2"><div class="list-group-item"><div class="row rtl text-right m-0"><div class="col-sm-3 p-0"><img src="'+row.wallpaper+'" class="w-100 img-thumbnail h-100"></div><div class="col-sm-9 p-0 pr-2 d-flex align-items-start flex-column"><div class="h-75"><div class="w_600 pointer hover_underline one_row" onclick="location.href=\'new/'+row.id+'\'">'+row.label+'</div><div class="f12">'+row.body+'</div></div><div class="f11 h-25 d-flex justify-content-between w-100" style="color: gray;bottom:5px"><span><span class="w_600 pointer hover_underline" onclick="location.href=\'/profile/'+row.by_member+'\'">'+row.username+'</span><i class="fas fa-circle px-2" style="font-size: 5px;"></i><span class="time_ago_dom" when="'+row.add_date+'"></span></span><span class="mx-2">'+row.comments+' <i class="fas fa-comment-alt"></i></span></div></div></div></div></div>';
+    if(row_counter==2 || data.length-1==index){append_data+='</div>';$(".append_news_area").append(append_data);append_data="";row_counter=0;}
+
+ var header=$(".one_row");
+    for(var i=0;i<header.length;i++)
+    {  row=$(".one_row").get(i);
+       $clamp(row,{clamp: 1});  
+    }
+     
+
+
+  })
+  set_when()
+  news_index++;
+ })}   
+
+
+
+
+ </script>
+
+
+
+</body>
+
+</html>

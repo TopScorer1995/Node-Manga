@@ -1,0 +1,276 @@
+<div class="w-responsive row mx-0">
+  <div class="col-md-3">
+    <!-- Card -->
+<div class="card chart-card ltr">
+
+  <!-- Card content -->
+  <div class="card-body pb-0">
+
+    <!-- Title -->
+    <h4 class="card-title font-weight-bold text-right" style="font-weight:100 !important">الفصول</h4>
+    <!-- Text -->
+    <div class="d-flex justify-content-between">
+      <p class="display-4 align-self-end"><%=data.data[0][0].chapters_count%></p>
+      <p class="align-self-end pb-2"><%=data.data[0][0].today_chapters%> (<%=((data.data[0][0].chapters_count-(data.data[0][0].chapters_count-data.data[0][0].today_chapters))/data.data[0][0].chapters_count*100).toFixed(2)%>%)</p>
+    </div>
+
+  </div>
+
+</div>
+<!-- Card -->
+  </div>
+  <div class="col-md-3">
+    <!-- Card -->
+<div class="card chart-card ltr">
+
+  <!-- Card content -->
+  <div class="card-body pb-0">
+
+    <!-- Title -->
+    <h4 class="card-title font-weight-bold text-right" style="font-weight:100 !important">السلاسل</h4>
+    <!-- Text -->
+    <div class="d-flex justify-content-between">
+      <p class="display-4 align-self-end"><%=data.data[2][0].series_count%></p>
+      <p class="align-self-end pb-2"><%=data.data[2][0].today_series%> (<%=((data.data[2][0].series_count-(data.data[2][0].series_count-data.data[2][0].today_series))/data.data[2][0].series_count*100).toFixed(2)%>%)</p>
+    </div>
+
+  </div>
+
+</div>
+<!-- Card -->
+  </div>
+  <div class="col-md-3">
+    <!-- Card -->
+<div class="card chart-card ltr">
+
+  <!-- Card content -->
+  <div class="card-body pb-0">
+
+    <!-- Title -->
+    <h4 class="card-title font-weight-bold text-right" style="font-weight:100 !important">المستخدمين</h4>
+    <!-- Text -->
+    <div class="d-flex justify-content-between">
+      <p class="display-4 align-self-end"><%=data.data[1][0].users_count%></p>
+      <p class="align-self-end pb-2"><%=data.data[1][0].today_users%> (<%=((data.data[1][0].users_count-(data.data[1][0].users_count-data.data[1][0].today_users))/data.data[1][0].users_count*100).toFixed(2)%>%)</p>
+    </div>
+
+  </div>
+
+</div>
+<!-- Card -->
+  </div>
+  <div class="col-md-3">
+    <!-- Card -->
+<div class="card chart-card ltr">
+
+  <!-- Card content -->
+  <div class="card-body pb-0">
+
+    <!-- Title -->
+    <h4 class="card-title font-weight-bold text-right" style="font-weight:100 !important">الفرق</h4>
+    <!-- Text -->
+    <div class="d-flex justify-content-between">
+      <p class="display-4 align-self-end"><%=data.data[3][0].teams_count%></p>
+      <p class="align-self-end pb-2"><%=data.data[3][0].today_teams%> (<%=((data.data[3][0].teams_count-(data.data[3][0].teams_count-data.data[3][0].today_teams))/data.data[3][0].teams_count*100).toFixed(2)%>%)</p>
+    </div>
+
+  </div>
+
+</div>
+<!-- Card -->
+  </div>
+</div>
+<div class="row w-responsive px-0  mx-0">
+  <div class="col-md-8  px-3 mt-3">
+    <div class="card">
+    <canvas id="lineChart"></canvas>
+  </div>
+  </div>
+  <div class="col-md-4 px-3 mt-3">
+    <div class="card">
+      <canvas id="barChart"></canvas>
+    </div>
+  </div>
+</div>
+<div class="row w-responsive  mx-0 px-0">
+  <div class="col-md-4  text-center px-3 my-3"><div class="card"><div class="alert text-white card  text-center" style="background: rgb(63, 92, 128);" role="alert">المعالج</div><canvas id="cpu"></canvas></div></div>
+  <div class="col-md-4  text-center px-3 my-3"><div class="card"><div class="alert text-white card  text-center" style="background: rgb(63, 92, 128);" role="alert">الذاكرة ( الإجمالي <%=data.total_mem%> جيجا )</div><canvas id="ram"></canvas></div></div>
+  <div class="col-md-4  text-center px-3 my-3"><div class="card"><div class="alert text-white card  text-center" style="background: rgb(63, 92, 128);" role="alert">القرص ( الإجمالي <%=data.total_hard%> جيجا )</div><canvas id="desk"></canvas></div></div>
+
+
+
+ <script>
+  //line
+  var ctxL = document.getElementById("lineChart").getContext('2d');
+  var myLineChart = new Chart(ctxL, {
+    type: 'line',
+    data: {
+      labels: ["January", "February", "March", "April", "May", "June", "July","August","September","October","November","December"],
+      datasets: [{
+          label: "نسبة الزيادة الشهرية للفصول",
+          data: [<%data.data[5].forEach(function(row,index){if(row.date=="Jan"){%><%=row.cnt%><%}})%>,<%data.data[5].forEach(function(row,index){if(row.date=="Feb"){%><%=row.cnt%><%}})%>,<%data.data[5].forEach(function(row,index){if(row.date=="Mar"){%><%=row.cnt%><%}})%>,<%data.data[5].forEach(function(row,index){if(row.date=="Apr"){%><%=row.cnt%><%}})%>,<%data.data[5].forEach(function(row,index){if(row.date=="May"){%><%=row.cnt%><%}})%>,<%data.data[5].forEach(function(row,index){if(row.date=="Jun"){%><%=row.cnt%><%}})%>,<%data.data[5].forEach(function(row,index){if(row.date=="Jul"){%><%=row.cnt%><%}})%>,<%data.data[5].forEach(function(row,index){if(row.date=="Aug"){%><%=row.cnt%><%}})%>,<%data.data[5].forEach(function(row,index){if(row.date=="Sep"){%><%=row.cnt%><%}})%>,<%data.data[5].forEach(function(row,index){if(row.date=="Oct"){%><%=row.cnt%><%}})%>,<%data.data[5].forEach(function(row,index){if(row.date=="Nov"){%><%=row.cnt%><%}})%>,<%data.data[5].forEach(function(row,index){if(row.date=="Dec"){%><%=row.cnt%><%}})%>],
+          backgroundColor: [
+            'rgba(105, 0, 132, .2)',
+          ],
+          borderColor: [
+            'rgba(200, 99, 132, .7)',
+          ],
+          borderWidth: 2
+        },
+        {
+          label: "نسبة الزيادة الشهرية للمستخدمين",
+          data: [<%data.data[7].forEach(function(row,index){if(row.date=="Jan"){%><%=row.cnt%><%}})%>,<%data.data[7].forEach(function(row,index){if(row.date=="Feb"){%><%=row.cnt%><%}})%>,<%data.data[7].forEach(function(row,index){if(row.date=="Mar"){%><%=row.cnt%><%}})%>,<%data.data[7].forEach(function(row,index){if(row.date=="Apr"){%><%=row.cnt%><%}})%>,<%data.data[7].forEach(function(row,index){if(row.date=="May"){%><%=row.cnt%><%}})%>,<%data.data[7].forEach(function(row,index){if(row.date=="Jun"){%><%=row.cnt%><%}})%>,<%data.data[7].forEach(function(row,index){if(row.date=="Jul"){%><%=row.cnt%><%}})%>,<%data.data[7].forEach(function(row,index){if(row.date=="Aug"){%><%=row.cnt%><%}})%>,<%data.data[7].forEach(function(row,index){if(row.date=="Sep"){%><%=row.cnt%><%}})%>,<%data.data[7].forEach(function(row,index){if(row.date=="Oct"){%><%=row.cnt%><%}})%>,<%data.data[7].forEach(function(row,index){if(row.date=="Nov"){%><%=row.cnt%><%}})%>,<%data.data[7].forEach(function(row,index){if(row.date=="Dec"){%><%=row.cnt%><%}})%>],
+          backgroundColor: [
+            'rgba(0, 137, 132, .2)',
+          ],
+          borderColor: [
+            'rgba(0, 10, 130, .7)',
+          ],
+          borderWidth: 2
+        },
+        {
+          label: "نسبة الزيادة الشهرية للفرق",
+          data: [<%data.data[8].forEach(function(row,index){if(row.date=="Jan"){%><%=row.cnt%><%}})%>,<%data.data[8].forEach(function(row,index){if(row.date=="Feb"){%><%=row.cnt%><%}})%>,<%data.data[8].forEach(function(row,index){if(row.date=="Mar"){%><%=row.cnt%><%}})%>,<%data.data[8].forEach(function(row,index){if(row.date=="Apr"){%><%=row.cnt%><%}})%>,<%data.data[8].forEach(function(row,index){if(row.date=="May"){%><%=row.cnt%><%}})%>,<%data.data[8].forEach(function(row,index){if(row.date=="Jun"){%><%=row.cnt%><%}})%>,<%data.data[8].forEach(function(row,index){if(row.date=="Jul"){%><%=row.cnt%><%}})%>,<%data.data[8].forEach(function(row,index){if(row.date=="Aug"){%><%=row.cnt%><%}})%>,<%data.data[8].forEach(function(row,index){if(row.date=="Sep"){%><%=row.cnt%><%}})%>,<%data.data[8].forEach(function(row,index){if(row.date=="Oct"){%><%=row.cnt%><%}})%>,<%data.data[8].forEach(function(row,index){if(row.date=="Nov"){%><%=row.cnt%><%}})%>,<%data.data[8].forEach(function(row,index){if(row.date=="Dec"){%><%=row.cnt%><%}})%>],
+          backgroundColor: [
+            'rgba(162,133,232,0.2)',
+          ],
+          borderColor: [
+            'rgba(162, 133, 232,1)',
+          ],
+          borderWidth: 2
+        },
+        {
+          label: "نسبة الزيادة الشهرية للسلاسل",
+          data: [<%data.data[6].forEach(function(row,index){if(row.date=="Jan"){%><%=row.cnt%><%}})%>,<%data.data[6].forEach(function(row,index){if(row.date=="Feb"){%><%=row.cnt%><%}})%>,<%data.data[6].forEach(function(row,index){if(row.date=="Mar"){%><%=row.cnt%><%}})%>,<%data.data[6].forEach(function(row,index){if(row.date=="Apr"){%><%=row.cnt%><%}})%>,<%data.data[6].forEach(function(row,index){if(row.date=="May"){%><%=row.cnt%><%}})%>,<%data.data[6].forEach(function(row,index){if(row.date=="Jun"){%><%=row.cnt%><%}})%>,<%data.data[6].forEach(function(row,index){if(row.date=="Jul"){%><%=row.cnt%><%}})%>,<%data.data[6].forEach(function(row,index){if(row.date=="Aug"){%><%=row.cnt%><%}})%>,<%data.data[6].forEach(function(row,index){if(row.date=="Sep"){%><%=row.cnt%><%}})%>,<%data.data[6].forEach(function(row,index){if(row.date=="Oct"){%><%=row.cnt%><%}})%>,<%data.data[6].forEach(function(row,index){if(row.date=="Nov"){%><%=row.cnt%><%}})%>,<%data.data[6].forEach(function(row,index){if(row.date=="Dec"){%><%=row.cnt%><%}})%>],
+          backgroundColor: [
+            'rgba(0, 255, 0, .2)',
+          ],
+          borderColor: [
+            'rgba(0, 255, 0, 1)',
+          ],
+          borderWidth: 2
+        }
+      ]
+    },
+    options: {
+      responsive: true
+    }
+  });
+
+</script>
+
+
+ <script>
+  //doughnut
+  var ctxD = document.getElementById("cpu").getContext('2d');
+  var myLineChart = new Chart(ctxD, {
+    type: 'doughnut',
+    data: {
+      labels: ["الإستهلاك الحالي", "القدرة المتبقية"],
+      datasets: [{
+        data: [<%=data.cpu_load%>,<%=100-data.cpu_load%>],
+        backgroundColor: ["#F7464A", "#46BFBD"],
+        hoverBackgroundColor: ["#FF5A5E", "#5AD3D1"]
+      }]
+    },
+    options: {
+      responsive: true
+    }
+  });
+
+
+</script>
+
+ 
+ <script>
+  //doughnut
+  var ctxD = document.getElementById("ram").getContext('2d');
+  var myLineChart = new Chart(ctxD, {
+    legend:{display:false},
+    type: 'doughnut',
+    data: {
+      labels: ["المساحة المستخدمة", "المساحة الحرة"],
+      datasets: [{
+        data: [<%=100-data.free_mem%>,<%=data.free_mem%>],
+        backgroundColor: ["#F7464A", "#46BFBD"],
+        hoverBackgroundColor: ["#FF5A5E", "#5AD3D1"]
+      }]
+    },
+    options: {
+      responsive: true
+    }
+  });
+
+
+</script>
+
+
+
+ <script>
+  //doughnut
+  var ctxD = document.getElementById("desk").getContext('2d');
+  var myLineChart = new Chart(ctxD, {
+    type: 'doughnut',
+    data: {
+      labels: ["مساحة مستهلك", "مساحة حرة"],
+      datasets: [{
+        data: [<%=data.used_hard%>,<%=100-data.used_hard%>],
+        backgroundColor: ["#F7464A", "#46BFBD"],
+        hoverBackgroundColor: ["#FF5A5E", "#5AD3D1"]
+      }]
+    },
+    options: {
+      responsive: true
+    }
+  });
+
+
+</script>
+
+
+<script>
+  //bar
+  var ctxB = document.getElementById("barChart").getContext('2d');
+  var myBarChart = new Chart(ctxB, {
+    type: 'bar',
+    data: {
+      labels: ["النشاطات", "التعليقات", "الإستفسارات", "الفصول", "المستخدمين"],
+      datasets: [{
+        label: 'المخطط البياني اليومي',
+        data: [<%=data.data[4][0].today_activity%>, <%=data.data[9][0].today_comments%>, <%=data.data[10][0].today_sessions%>, <%=data.data[0][0].today_chapters%>, <%=data.data[1][0].today_users%>],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255,99,132,1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+
+</script>
+
+
+</div>
+
+
+
+

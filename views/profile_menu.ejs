@@ -1,0 +1,94 @@
+<div class="dropdown profile_menu_continer">
+ 
+    <!--Trigger-->
+     
+     <a  class="btn-floating btn-sm  waves-effect waves-light round_nav_button dropdown-toggle profile_menu_trigger" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false"><i  class="fas fa-user" data-toggle="tooltip" data-placement="bottom" title="حسابي"></i></a>
+
+    <!--Menu-->
+     <div class="dropdown-menu dropdown-primary dropdown-menu-right w_250_px without_mh prevent-close profile_menu">
+     <span class="badge badge-primary d-block  py-2 w-100">أخر دخول <%=last_login%></span>
+     <h6 class="ltr text-center mt-4 w_600 f13"><%=username%> (<%=rank%>)</h6>
+<form class="md-form w-100" enctype="multipart/form-data" id="my_profile_menu_pic_form">
+    <div class="file-field">
+        <div class="mb-4">
+            <img src="<%=my_profile%>" class="rounded-circle  d-block rounded-circle img-fluid img-thumbnail mx-auto avatar-pic w_150_px h_150_px cover_img" alt="placeholder avatar">
+        </div>
+        <div class="d-flex justify-content-center">
+            <div class="btn btn-mdb-color btn-rounded float-left py-1">
+                <span>تغير الصورة</span>
+                <input type="file" id="my_profile_menu_pic" name="profile_file">
+            </div>
+        </div>
+    </div>
+</form>
+      <span class="badge btn-primary d-block btn-rounded py-2 w-100 text-right f12 my-1 px-2 waves-effect" onclick='location.href="/profile/<%=id%>"'><i  class="fas fa-user mx-2"></i> الملف الشخصي</span>
+      <%if(rank=='مدير'){%>
+          
+           <span class="badge btn-primary d-block btn-rounded py-2 w-100 text-right f12 my-1 px-2 waves-effect" data-toggle="modal" data-target="#write_new_modal" onclick="get_news_modal()"><i class="fas fa-newspaper mx-2"></i> إضافة خبر جديد</span>
+
+      <%}%>
+     
+      <span class="badge btn-primary d-block btn-rounded py-2 w-100 text-right f12 my-1 px-2 waves-effect" onclick="get_user_edit_modal(<%=id%>)"><i class="fas fa-cog mx-2"></i>تعديل الإعدادات</span>
+ <%if(rank=='مدير'){%><span class="badge btn-primary btn-rounded d-block   py-2 w-100 text-right f12 my-1 px-2 waves-effect" onclick="location.href='/cpanel'"><i class="fas fa-users-cog mx-2"></i>لوحة التحكم</span><%}%>
+       <span class="badge btn-primary d-block btn-rounded  py-2 w-100 text-right f12 my-1 px-2 waves-effect" id="logout"><i class="fas fa-sign-out-alt mx-2"></i>تسجيل الخروج</span>
+</div>
+
+   
+</div>
+
+
+<script type="text/javascript">
+  
+
+  $(document).on("click","#logout",logout_handle);
+
+   function logout_handle(){$.post("/logout",function(data){if(data==1){location.reload()}})}
+
+   $(document).on("change","#my_profile_menu_pic", function(e){
+    
+
+    if(this.files[0].size/1024/1024 > 5){
+       toastr.error("حجم الملف يجب أن لا يتجاوز 5 ميجا")
+       this.value = "";
+    }else{
+
+      var ext = this.value.match(/\.([^\.]+)$/)[1];
+    switch(ext)
+    {
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+        case 'gif':
+            upload_photo();
+            break;
+        default:
+            toastr.error('صيغة الملف غير مقبولة')
+            this.value='';
+    }
+
+
+    };
+
+
+
+
+})
+
+   function upload_photo()
+   {
+
+
+  var form = new FormData($("#my_profile_menu_pic_form")[0]);
+  $.ajax({
+        url: "/upload_profile",
+        method: "POST",
+        dataType: 'json',
+        data: form,
+        processData: false,
+        contentType: false,
+        success: function(result){if(result==1){location.reload()}}
+});
+
+   }
+</script>

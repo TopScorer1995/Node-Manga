@@ -1,0 +1,308 @@
+
+<!-- Modal -->
+<div class="modal  fade" id="cpanel_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-right rtl">
+        <div class="modal-title f13 text-center d-block w-100" id="exampleModalLabel">لوحة التحكم</div>
+        
+      </div>
+      <div class="modal-body">
+     <div class="text-center py-3 rtl">
+     <div class="btn-group" role="group" aria-label="First group">
+            <button type="button" class="btn indigo lighten-2 disabled waves-effect waves-light"><i class="fas fa-user" aria-hidden="true"></i><span class="w_600"> <%=data[4][0].users_count%> </span></button>
+            <button type="button" class="btn indigo lighten-2 disabled waves-effect waves-light"><i class="fa fa-users" aria-hidden="true"></i><span class="w_600"> <%=data[4][0].teams_count || 0%> </span></button>
+  <button type="button" class="btn indigo lighten-2 disabled waves-effect waves-light"><i class="fas fa-book-open" aria-hidden="true"></i><span class="w_600"> <%=data[4][0].chapter_count || 0%> </span></button>
+            <button type="button" class="btn indigo lighten-2 waves-effect disabled waves-light"><i class="fas fa-theater-masks" aria-hidden="true"></i><span class="w_600"> <%=data[4][0].series_count%> </span></button>
+          </div>
+     </div>
+
+        <ul class="mr-0 pr-0 mt-0 pt-0 nav md-pills pills-secondary nav-justified f14 rtl" id="myTabJust" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="home-tab-just" data-toggle="tab" href="#users" role="tab" aria-controls="home-just" aria-selected="true">مستخدمين</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="profile-tab-just" data-toggle="tab" href="#teams" role="tab" aria-controls="profile-just" aria-selected="false">فرق</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="contact-tab-just" data-toggle="tab" href="#series" role="tab" aria-controls="contact-just" aria-selected="false">سلاسل</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="contact-tab-just" data-toggle="tab" href="#reports" role="tab" aria-controls="contact-just" aria-selected="false">بلاغات</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="contact-tab-just" data-toggle="tab" href="#activity" role="tab" aria-controls="contact-just" aria-selected="false">السجل</a>
+  </li>
+</ul>
+
+
+<div class="tab-content card pt-5" id="myTabContentJust">
+  <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="home-tab-just">
+
+<div class="table-responsive">
+ <table  class="datatable table text-center rtl table-striped table-bordered" cellspacing="0" width="100%">
+  <thead>
+    <tr>
+      <th class="th-sm">المستخدم
+      </th>
+      <th class="th-sm">الحالة
+      </th>
+      <th class="th-sm">العضوية
+      </th>
+      <th class="th-sm">أخر ظهور
+      </th>
+      <th class="th-sm">الإنضمام
+      </th>
+      <th class="th-sm">تعديل
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <%data[2].forEach(function(user,index)
+    {%>
+
+<tr>
+      <td><%=user.username%></td>
+      <td><% if(user.suspend==0){%>نشط<%}else{%>محظور<%}%></td>
+      <td><%=user.rank%></td>
+      <td><%=user.last_login%></td>
+      <td><%=user.join_date%></td>
+      <td class="text-center pointer"><i class="fas fa-pen-square" onclick="get_user_edit_modal('<%=user.id%>')"></i></td>
+    </tr>
+
+
+    <%})%>
+    
+  </tbody>
+  <tfoot>
+    <tr>
+      <th>المستخدم
+      </th>
+      <th>الحالة
+      </th>
+      <th>العضوية
+      </th>
+      <th>أخر ظهور
+      </th>
+      <th>الإنضمام
+      </th>
+      <th>تعديل
+      </th>
+    </tr>
+  </tfoot>
+</table>
+</div>
+  </div>
+  <div class="tab-pane fade" id="teams" role="tabpanel" aria-labelledby="profile-tab-just">
+<div class="table-responsive">
+ <table  class="datatable table rtl text-center table-striped table-bordered" cellspacing="0" width="100%">
+  <thead>
+    <tr>
+      <th class="th-sm">الفريق
+      </th>
+      <th class="th-sm">الحالة
+      </th>
+      <th class="th-sm">تاريخ الإنشاء
+      </th>
+      <th class="th-sm">القائد
+      </th>
+      <th class="th-sm">عدد الأعضاء
+      </th>
+      <th class="th-sm">تعديل
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <%data[1].forEach(function(team,index)
+    {%>
+
+      <tr>
+      <td><%=team.team_name%></td>
+      <td><%if(team.active==1 && team.suspend!=1){%>نشط<%}else if(team.suspend==1){%>محظور<%} else {%>معلق<%}%></td>
+      <td><%=team.create_date%></td>
+      <td><%=team.creator_name || 'لا يوجد'%></td>
+      <td><%=team.members_count%></td>
+      <td class="text-center pointer"><i class="fas fa-pen-square"  onclick="get_team_modal('<%=team.id%>')"></i></td>
+    </tr>
+
+   <% })%>
+    
+  </tbody>
+  <tfoot>
+    <tr>
+      <th>الفريق
+      </th>
+      <th>الحالة
+      </th>
+      <th>تاريخ الإنشاء
+      </th>
+      <th>القائد
+      </th>
+      <th>عدد الأعضاء
+      </th>
+      <th>تعديل
+      </th>
+    </tr>
+  </tfoot>
+</table>
+</div>
+  </div>
+  <div class="tab-pane fade" id="series" role="tabpanel" aria-labelledby="contact-tab-just">
+  
+<div class="table-responsive">
+ <table  class="datatable table text-center rtl table-striped table-bordered" cellspacing="0" width="100%">
+  <thead>
+    <tr>
+      <th class="th-sm">السلسلة
+      </th>
+      <th class="th-sm">الحالة
+      </th>
+      <th class="th-sm">بواسطة
+      </th>
+      <th class="th-sm">تاريخ الإضافة
+      </th>
+      <th class="th-sm">عدد الفصول
+      </th>
+      <th class="th-sm">تعديل
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <%data[0].forEach(function(series,index){%>
+
+
+     <tr>
+      <td><%=series.series_name || 'لا يوجد'%></td>
+      <td><%if(series.checked==0){%>في الإنتظار<%}else{%>تمت الموافقة<%}%></td>
+      <td><%=series.by_user%></td>
+      <td><%=series.add_date%></td>
+      <td><%=series.chapters_count || 0%></td>
+      <td class="text-center pointer"><i class="fas fa-pen-square" onclick="get_series_modal('<%=series.id%>')"></i></td>
+    </tr>
+
+
+    <%})%>
+    
+  </tbody>
+  <tfoot>
+    <tr>
+      <th>السلسلة
+      </th>
+      <th>الحالة
+      </th>
+      <th>بواسطة
+      </th>
+      <th>تاريخ  الإضافة
+      </th>
+      <th>عددالفصول
+      </th>
+      <th>تعديل
+      </th>
+    </tr>
+  </tfoot>
+</table>
+</div>
+  </div>
+  <div class="tab-pane fade" id="reports" role="tabpanel" aria-labelledby="contact-tab-just">
+    
+<div class="table-responsive">
+ <table  class="datatable table text-center rtl table-striped table-bordered" cellspacing="0" width="100%">
+  <thead>
+    <tr>
+    	<th class="th-sm">نوع البلاغ
+      </th>
+      <th class="th-sm">السبب
+      </th>
+      <th class="th-sm">بواسطة
+      </th>
+      <th class="th-sm">عولج بواسطة
+      </th>
+      <th class="th-sm">منذ
+      </th>
+      <th class="th-sm">معالجة
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <%data[3].forEach(function(report,index){%>
+
+
+<tr>
+      <td><%if(report.type=="chapter"){%>فصل<%}else{%>فريق<%}%></td>
+      <td><%=report.body%></td>
+      <td><%=report.add_by%></td>
+      <td><%=report.proccessed_by || 'لم يعالج'%></td>
+      <td><%=report.add_date%></td>
+      <td class="text-center pointer"><i class="fas fa-pen-square" onclick="proccess_report(<%=report.id%>);<%if(report.type=="chapter"){%>get_chapter_modal(<%=report.report_on_id%>)<%}else{%>get_team_modal(<%=report.report_on_id%>)<%}%>"></i></td>
+</tr>
+
+
+    <%})%>
+    
+  </tbody>
+  <tfoot>
+    <tr>
+    	<th>نوع البلاغ
+      </th>
+      <th>السبب
+      </th>
+      <th>بواسطة
+      </th>
+      <th>عولج بواسطة
+      </th>
+      <th>منذ
+      </th>
+      <th>معالجة
+      </th>
+    </tr>
+  </tfoot>
+</table>
+</div>
+  </div>
+  <div class="tab-pane fade" id="activity" role="tabpanel" aria-labelledby="contact-tab-just">
+  <div class="table-responsive"><table id="tablePreview" class=" rtl text-right table table-striped">
+            <!--Table head-->
+            <thead>
+
+              <tr>
+                <th>#</th>
+                <th>النشاط</th>
+              </tr>
+            </thead>
+            <!--Table head-->
+            <!--Table body-->
+            <tbody>
+              
+              <%data[5].forEach(function(activity,index)
+              {%>
+
+                <tr>
+                <th scope="row"><%=index+1%></th>
+                <td><%=activity.process%></td>
+              </tr>
+                
+              <%})%>
+              
+            </tbody>
+            <!--Table body-->
+          </table></div>
+  </div>
+</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary py-2" data-dismiss="modal">تم</button>
+      </div>
+    </div>
+  </div>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+$('.datatable').DataTable();
+$('.dataTables_length').addClass('bs-select');
+});
+
+
+function proccess_report(id){$.post("/proccess_report",{id:id})}  
+</script>
+
+</div>
